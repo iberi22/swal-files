@@ -1,0 +1,1 @@
+../crates/swal-files-core/tests/test_watcher_integration.rs
