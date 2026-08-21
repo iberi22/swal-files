@@ -1,0 +1,17 @@
+{
+  "id": "feat-files-12",
+  "name": "Image & SVG Thumbnail Generator",
+  "crate": "swal-files-preview",
+  "wave": "wave-1",
+  "status": "pending",
+  "completion_percentage": 0,
+  "target_files": [
+    "crates/swal-files-preview/src/image.rs",
+    "crates/swal-files-preview/src/lib.rs"
+  ],
+  "acceptance_criteria": [
+    "Implement Image & SVG Thumbnail Generator conforming to SWAL Files specifications",
+    "Zero compiler warnings and zero unsafe blocks unless strictly required",
+    "Comprehensive automated unit tests with cargo test passing"
+  ]
+}

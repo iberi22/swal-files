@@ -1,0 +1,17 @@
+{
+  "id": "feat-files-05",
+  "name": "Multi-Tab State Manager & Dual-Pane Coordinator",
+  "crate": "swal-files-core",
+  "wave": "wave-1",
+  "status": "pending",
+  "completion_percentage": 0,
+  "target_files": [
+    "crates/swal-files-core/src/tabs.rs",
+    "crates/swal-files-core/src/lib.rs"
+  ],
+  "acceptance_criteria": [
+    "Implement Multi-Tab State Manager & Dual-Pane Coordinator conforming to SWAL Files specifications",
+    "Zero compiler warnings and zero unsafe blocks unless strictly required",
+    "Comprehensive automated unit tests with cargo test passing"
+  ]
+}

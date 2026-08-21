@@ -1,0 +1,16 @@
+{
+  "id": "feat-files-08",
+  "name": "Unified & Side-by-Side Git Diff Parser",
+  "crate": "swal-files-git",
+  "wave": "wave-1",
+  "status": "pending",
+  "completion_percentage": 0,
+  "target_files": [
+    "crates/swal-files-git/src/diff.rs"
+  ],
+  "acceptance_criteria": [
+    "Implement Unified & Side-by-Side Git Diff Parser conforming to SWAL Files specifications",
+    "Zero compiler warnings and zero unsafe blocks unless strictly required",
+    "Comprehensive automated unit tests with cargo test passing"
+  ]
+}

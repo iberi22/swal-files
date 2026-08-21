@@ -1,0 +1,16 @@
+[package]
+name = "swal-files-app"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+swal-files-core = { path = "../swal-files-core" }
+swal-files-git = { path = "../swal-files-git" }
+swal-files-preview = { path = "../swal-files-preview" }
+swal-files-agent = { path = "../swal-files-agent" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.0", features = ["full"] }
+
+[dev-dependencies]
+tempfile = "3.8"

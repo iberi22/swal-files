@@ -1,0 +1,17 @@
+{
+  "id": "feat-files-06",
+  "name": "Git Repository Detector & Branch Resolver",
+  "crate": "swal-files-git",
+  "wave": "wave-1",
+  "status": "pending",
+  "completion_percentage": 0,
+  "target_files": [
+    "crates/swal-files-git/src/detector.rs",
+    "crates/swal-files-git/Cargo.toml"
+  ],
+  "acceptance_criteria": [
+    "Implement Git Repository Detector & Branch Resolver conforming to SWAL Files specifications",
+    "Zero compiler warnings and zero unsafe blocks unless strictly required",
+    "Comprehensive automated unit tests with cargo test passing"
+  ]
+}

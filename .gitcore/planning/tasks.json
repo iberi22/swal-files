@@ -1,0 +1,21 @@
+{
+  "wave": "wave-1",
+  "total_tasks": 15,
+  "tasks": [
+    {"task_id": "TASK-01", "feature_id": "feat-files-01", "assigned_to": "Jules", "priority": "P0", "status": "ready"},
+    {"task_id": "TASK-02", "feature_id": "feat-files-02", "assigned_to": "Jules", "priority": "P0", "status": "ready"},
+    {"task_id": "TASK-03", "feature_id": "feat-files-03", "assigned_to": "Jules", "priority": "P0", "status": "ready"},
+    {"task_id": "TASK-04", "feature_id": "feat-files-04", "assigned_to": "Jules", "priority": "P0", "status": "ready"},
+    {"task_id": "TASK-05", "feature_id": "feat-files-05", "assigned_to": "Jules", "priority": "P0", "status": "ready"},
+    {"task_id": "TASK-06", "feature_id": "feat-files-06", "assigned_to": "Jules", "priority": "P0", "status": "ready"},
+    {"task_id": "TASK-07", "feature_id": "feat-files-07", "assigned_to": "Jules", "priority": "P0", "status": "ready"},
+    {"task_id": "TASK-08", "feature_id": "feat-files-08", "assigned_to": "Jules", "priority": "P0", "status": "ready"},
+    {"task_id": "TASK-09", "feature_id": "feat-files-09", "assigned_to": "Jules", "priority": "P0", "status": "ready"},
+    {"task_id": "TASK-10", "feature_id": "feat-files-10", "assigned_to": "Jules", "priority": "P0", "status": "ready"},
+    {"task_id": "TASK-11", "feature_id": "feat-files-11", "assigned_to": "Jules", "priority": "P0", "status": "ready"},
+    {"task_id": "TASK-12", "feature_id": "feat-files-12", "assigned_to": "Jules", "priority": "P0", "status": "ready"},
+    {"task_id": "TASK-13", "feature_id": "feat-files-13", "assigned_to": "Jules", "priority": "P0", "status": "ready"},
+    {"task_id": "TASK-14", "feature_id": "feat-files-14", "assigned_to": "Jules", "priority": "P0", "status": "ready"},
+    {"task_id": "TASK-15", "feature_id": "feat-files-15", "assigned_to": "Jules", "priority": "P0", "status": "ready"}
+  ]
+}

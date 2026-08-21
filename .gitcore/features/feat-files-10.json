@@ -1,0 +1,17 @@
+{
+  "id": "feat-files-10",
+  "name": "Source Code Syntax Highlighter (Syntect)",
+  "crate": "swal-files-preview",
+  "wave": "wave-1",
+  "status": "pending",
+  "completion_percentage": 0,
+  "target_files": [
+    "crates/swal-files-preview/src/syntax.rs",
+    "crates/swal-files-preview/Cargo.toml"
+  ],
+  "acceptance_criteria": [
+    "Implement Source Code Syntax Highlighter (Syntect) conforming to SWAL Files specifications",
+    "Zero compiler warnings and zero unsafe blocks unless strictly required",
+    "Comprehensive automated unit tests with cargo test passing"
+  ]
+}

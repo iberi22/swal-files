@@ -1,0 +1,17 @@
+{
+  "id": "feat-files-15",
+  "name": "Hybrid Omnibar Command & Breadcrumb Parser",
+  "crate": "swal-files-app",
+  "wave": "wave-1",
+  "status": "pending",
+  "completion_percentage": 0,
+  "target_files": [
+    "crates/swal-files-app/src/omnibar.rs",
+    "crates/swal-files-app/Cargo.toml"
+  ],
+  "acceptance_criteria": [
+    "Implement Hybrid Omnibar Command & Breadcrumb Parser conforming to SWAL Files specifications",
+    "Zero compiler warnings and zero unsafe blocks unless strictly required",
+    "Comprehensive automated unit tests with cargo test passing"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "feat-files-07",
+  "name": "Git Working Tree Status Reader",
+  "crate": "swal-files-git",
+  "wave": "wave-1",
+  "status": "pending",
+  "completion_percentage": 0,
+  "target_files": [
+    "crates/swal-files-git/src/status.rs"
+  ],
+  "acceptance_criteria": [
+    "Implement Git Working Tree Status Reader conforming to SWAL Files specifications",
+    "Zero compiler warnings and zero unsafe blocks unless strictly required",
+    "Comprehensive automated unit tests with cargo test passing"
+  ]
+}

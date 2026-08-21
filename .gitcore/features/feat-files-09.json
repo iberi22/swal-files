@@ -1,0 +1,17 @@
+{
+  "id": "feat-files-09",
+  "name": "Git Stage Operator & Commit Builder",
+  "crate": "swal-files-git",
+  "wave": "wave-1",
+  "status": "pending",
+  "completion_percentage": 0,
+  "target_files": [
+    "crates/swal-files-git/src/commit.rs",
+    "crates/swal-files-git/src/lib.rs"
+  ],
+  "acceptance_criteria": [
+    "Implement Git Stage Operator & Commit Builder conforming to SWAL Files specifications",
+    "Zero compiler warnings and zero unsafe blocks unless strictly required",
+    "Comprehensive automated unit tests with cargo test passing"
+  ]
+}

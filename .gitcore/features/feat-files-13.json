@@ -1,0 +1,17 @@
+{
+  "id": "feat-files-13",
+  "name": "Xavier Cognitive Memory REST/WebSocket Client",
+  "crate": "swal-files-agent",
+  "wave": "wave-1",
+  "status": "pending",
+  "completion_percentage": 0,
+  "target_files": [
+    "crates/swal-files-agent/src/client.rs",
+    "crates/swal-files-agent/Cargo.toml"
+  ],
+  "acceptance_criteria": [
+    "Implement Xavier Cognitive Memory REST/WebSocket Client conforming to SWAL Files specifications",
+    "Zero compiler warnings and zero unsafe blocks unless strictly required",
+    "Comprehensive automated unit tests with cargo test passing"
+  ]
+}

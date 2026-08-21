@@ -1,0 +1,16 @@
+{
+  "id": "feat-files-02",
+  "name": "Async Directory Scanner & Sorter",
+  "crate": "swal-files-core",
+  "wave": "wave-1",
+  "status": "pending",
+  "completion_percentage": 0,
+  "target_files": [
+    "crates/swal-files-core/src/scanner.rs"
+  ],
+  "acceptance_criteria": [
+    "Implement Async Directory Scanner & Sorter conforming to SWAL Files specifications",
+    "Zero compiler warnings and zero unsafe blocks unless strictly required",
+    "Comprehensive automated unit tests with cargo test passing"
+  ]
+}

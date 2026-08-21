@@ -1,0 +1,9 @@
+[workspace]
+members = [
+    "crates/swal-files-core",
+    "crates/swal-files-git",
+    "crates/swal-files-preview",
+    "crates/swal-files-agent",
+    "crates/swal-files-app"
+]
+resolver = "2"
