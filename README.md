@@ -1,13 +1,13 @@
 # ⚡ SWAL Files: Modern Minimalist Agentic File Manager
 
-### Native Rust + GPU-Accelerated (200Hz+) + Fluent Mica Translucency + macOS QuickLook + Dedicated Git Tab
+### Native Rust + GPU-Accelerated (120Hz+) + Fluent Mica Translucency + macOS QuickLook + Dedicated Git Tab
 
 <p align="center">
   <a href="https://www.rust-lang.org">
     <img src="https://img.shields.io/badge/Rust-2021_Edition-DEA584?style=for-the-badge&logo=rust&logoColor=white" alt="Rust"/>
   </a>
   <a href="https://wgpu.rs">
-    <img src="https://img.shields.io/badge/Render-GPU_wgpu_200Hz-00ff88?style=for-the-badge" alt="Render"/>
+    <img src="https://img.shields.io/badge/Render-GPU_wgpu_120Hz-00ff88?style=for-the-badge" alt="Render"/>
   </a>
   <a href="https://github.com/files-community/Files">
     <img src="https://img.shields.io/badge/Design-Fluent_Mica_Acrylic-06b6d4?style=for-the-badge" alt="Design"/>
@@ -27,7 +27,7 @@
 
 ## 🚀 Key Features
 
-- **⚡ 200Hz+ GPU-Accelerated Rendering**: Sub-5.0ms frame budgeting with virtualized scroll lists capable of rendering 100,000+ files without UI lag.
+- **⚡ 120Hz+ GPU-Accelerated Rendering**: Sub-5.0ms frame budgeting with virtualized scroll lists capable of rendering 100,000+ files without UI lag.
 - **🎨 Fluent & Mica Acrylic Glassmorphism**: Translucent frosted surfaces, glowing hover rings, and `@swal/ui` design tokens (`Hive Dark`, `Cyber Neon`, `Nord Frost`).
 - **📌 Multi-Tab & Dual-Pane**: Browser-style draggable tabs, tab tear-off, and side-by-side dual pane view (`F6`).
 - **🔍 QuickLook Multimodal Previews (`Spacebar`)**: Instant modal previews for Markdown, source code with syntax highlighting, images, SVGs, audio, and Xavier AI summaries.
