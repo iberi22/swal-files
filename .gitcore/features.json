@@ -2,8 +2,8 @@
   "version": "3.8.0",
   "project_name": "swal-files",
   "description": "Modern Minimalist Agentic File Manager in Rust, inspired by files-community/Files, macOS Finder & Yazi",
-  "total_features": 15,
-  "completed_features": 15,
+  "total_features": 30,
+  "completed_features": 30,
   "overall_progress": 100,
   "waves": [
     {
@@ -13,143 +13,14 @@
       "total_tasks": 15,
       "completed_tasks": 15,
       "progress": 100
-    }
-  ],
-  "features": [
-    {
-      "id": "feat-files-01",
-      "wave": "wave-1",
-      "name": "Core File Entry Types & Metadata Contract",
-      "crate": "swal-files-core",
-      "status": "pending",
-      "completion_percentage": 0,
-      "target_files": ["crates/swal-files-core/src/types.rs", "crates/swal-files-core/Cargo.toml"]
     },
     {
-      "id": "feat-files-02",
-      "wave": "wave-1",
-      "name": "Async Directory Scanner & Sorter",
-      "crate": "swal-files-core",
-      "status": "pending",
-      "completion_percentage": 0,
-      "target_files": ["crates/swal-files-core/src/scanner.rs"]
-    },
-    {
-      "id": "feat-files-03",
-      "wave": "wave-1",
-      "name": "Real-time inotify Filesystem Watcher",
-      "crate": "swal-files-core",
-      "status": "pending",
-      "completion_percentage": 0,
-      "target_files": ["crates/swal-files-core/src/watcher.rs"]
-    },
-    {
-      "id": "feat-files-04",
-      "wave": "wave-1",
-      "name": "Declarative JSON Configuration Engine",
-      "crate": "swal-files-core",
-      "status": "pending",
-      "completion_percentage": 0,
-      "target_files": ["crates/swal-files-core/src/config.rs"]
-    },
-    {
-      "id": "feat-files-05",
-      "wave": "wave-1",
-      "name": "Multi-Tab State Manager & Dual-Pane Coordinator",
-      "crate": "swal-files-core",
-      "status": "pending",
-      "completion_percentage": 0,
-      "target_files": ["crates/swal-files-core/src/tabs.rs", "crates/swal-files-core/src/lib.rs"]
-    },
-    {
-      "id": "feat-files-06",
-      "wave": "wave-1",
-      "name": "Git Repository Detector & Branch Resolver",
-      "crate": "swal-files-git",
-      "status": "pending",
-      "completion_percentage": 0,
-      "target_files": ["crates/swal-files-git/src/detector.rs", "crates/swal-files-git/Cargo.toml"]
-    },
-    {
-      "id": "feat-files-07",
-      "wave": "wave-1",
-      "name": "Git Working Tree Status Reader",
-      "crate": "swal-files-git",
-      "status": "pending",
-      "completion_percentage": 0,
-      "target_files": ["crates/swal-files-git/src/status.rs"]
-    },
-    {
-      "id": "feat-files-08",
-      "wave": "wave-1",
-      "name": "Unified & Side-by-Side Git Diff Parser",
-      "crate": "swal-files-git",
-      "status": "pending",
-      "completion_percentage": 0,
-      "target_files": ["crates/swal-files-git/src/diff.rs"]
-    },
-    {
-      "id": "feat-files-09",
-      "wave": "wave-1",
-      "name": "Git Stage Operator & Commit Builder",
-      "crate": "swal-files-git",
-      "status": "pending",
-      "completion_percentage": 0,
-      "target_files": ["crates/swal-files-git/src/commit.rs", "crates/swal-files-git/src/lib.rs"]
-    },
-    {
-      "id": "feat-files-10",
-      "wave": "wave-1",
-      "name": "Source Code Syntax Highlighter (Syntect)",
-      "crate": "swal-files-preview",
-      "status": "pending",
-      "completion_percentage": 0,
-      "target_files": ["crates/swal-files-preview/src/syntax.rs", "crates/swal-files-preview/Cargo.toml"]
-    },
-    {
-      "id": "feat-files-11",
-      "wave": "wave-1",
-      "name": "QuickLook Markdown Parser & Formatter",
-      "crate": "swal-files-preview",
-      "status": "pending",
-      "completion_percentage": 0,
-      "target_files": ["crates/swal-files-preview/src/markdown.rs"]
-    },
-    {
-      "id": "feat-files-12",
-      "wave": "wave-1",
-      "name": "Image & SVG Thumbnail Generator",
-      "crate": "swal-files-preview",
-      "status": "pending",
-      "completion_percentage": 0,
-      "target_files": ["crates/swal-files-preview/src/image.rs", "crates/swal-files-preview/src/lib.rs"]
-    },
-    {
-      "id": "feat-files-13",
-      "wave": "wave-1",
-      "name": "Xavier Cognitive Memory REST/WebSocket Client",
-      "crate": "swal-files-agent",
-      "status": "pending",
-      "completion_percentage": 0,
-      "target_files": ["crates/swal-files-agent/src/client.rs", "crates/swal-files-agent/Cargo.toml"]
-    },
-    {
-      "id": "feat-files-14",
-      "wave": "wave-1",
-      "name": "Semantic Auto-Tagger & Natural Language Query Parser",
-      "crate": "swal-files-agent",
-      "status": "pending",
-      "completion_percentage": 0,
-      "target_files": ["crates/swal-files-agent/src/tagger.rs", "crates/swal-files-agent/src/lib.rs"]
-    },
-    {
-      "id": "feat-files-15",
-      "wave": "wave-1",
-      "name": "Hybrid Omnibar Command & Breadcrumb Parser",
-      "crate": "swal-files-app",
-      "status": "pending",
-      "completion_percentage": 0,
-      "target_files": ["crates/swal-files-app/src/omnibar.rs", "crates/swal-files-app/Cargo.toml"]
+      "id": "wave-2",
+      "name": "Wave 2 — Integration, E2E Testing & Advanced UX Capabilities",
+      "status": "completed",
+      "total_tasks": 15,
+      "completed_tasks": 15,
+      "progress": 100
     }
   ]
 }

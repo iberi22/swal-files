@@ -1,7 +1,8 @@
 pub mod client;
+pub mod graph;
 pub mod tagger;
 
-pub use tagger::{
-    AutoTagger, FileMetadata, NlQueryParser, ParsedQuery, SortDirection, SortField, Tag, TagCategory, TagColor,
-    TagRule, TaggedFile, TaggerError,
-};
+pub use client::{MemoryEntry, MemoryQuery, XavierClient, XavierClientConfig};
+pub use graph::{EdgeKind, FileDependencyGraph, GraphEdge, GraphNode};
+pub use tagger::{AutoTagger, Tag, TagCategory, TagColor};
+
