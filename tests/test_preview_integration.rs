@@ -1,0 +1,1 @@
+../crates/swal-files-preview/tests/test_preview_integration.rs
