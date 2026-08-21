@@ -192,6 +192,10 @@ pub async fn read_working_tree_status<P: AsRef<Path>>(
     repo_path: P,
 ) -> Result<GitWorkingTreeStatus, GitStatusError> {
     let path = repo_path.as_ref();
+    if !crate::detector::GitDetector::new().is_git_repository(path).await {
+        return Err(GitStatusError::NotAGitRepository(path.to_path_buf()));
+    }
+
     let output = Command::new("git")
         .arg("status")
         .arg("--porcelain=v2")
@@ -203,7 +207,7 @@ pub async fn read_working_tree_status<P: AsRef<Path>>(
 
     if !output.status.success() {
         let stderr = String::from_utf8_lossy(&output.stderr).to_string();
-        if stderr.contains("not a git repository") {
+        if stderr.to_lowercase().contains("not a git repository") {
             return Err(GitStatusError::NotAGitRepository(path.to_path_buf()));
         }
         return Err(GitStatusError::GitCommandFailed {

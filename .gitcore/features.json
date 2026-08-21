@@ -3,16 +3,16 @@
   "project_name": "swal-files",
   "description": "Modern Minimalist Agentic File Manager in Rust, inspired by files-community/Files, macOS Finder & Yazi",
   "total_features": 15,
-  "completed_features": 0,
-  "overall_progress": 0,
+  "completed_features": 15,
+  "overall_progress": 100,
   "waves": [
     {
       "id": "wave-1",
       "name": "Wave 1 — Core Architecture, Git Engine & Preview Decoders",
-      "status": "pending_dispatch",
+      "status": "completed",
       "total_tasks": 15,
-      "completed_tasks": 0,
-      "progress": 0
+      "completed_tasks": 15,
+      "progress": 100
     }
   ],
   "features": [
