@@ -40,7 +40,7 @@
 
 ### 3.4 Omnibar & Paleta Agéntica Híbrida (`Ctrl+L` / `Ctrl+P`)
 - Soporta 4 tipos de intenciones:
-  1. `Navegación`: `/home/belal/proyectosSWAL` o `~/Downloads`.
+  1. `Navegación`: `<workspace-root>` o `~/Downloads`.
   2. `Búsqueda Rápida`: `?nombre_archivo`.
   3. `Comandos Shell`: `>cargo build`.
   4. `Prompt Agéntico`: `@explica los cambios de este commit`.
