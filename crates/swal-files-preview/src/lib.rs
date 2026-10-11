@@ -14,4 +14,5 @@ pub use image::{
     Dimensions, FitMode, ImageError, ImageFormat, ImageMetadata, SvgInfo, Thumbnail,
     ThumbnailOptions, ThumbnailOutputFormat,
 };
+pub use markdown::{parse_markdown_preview, MarkdownError, MarkdownPreview};
 
