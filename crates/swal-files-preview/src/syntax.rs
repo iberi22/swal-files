@@ -499,8 +499,10 @@ mod tests {
     #[test]
     fn test_highlight_to_ansi() {
         let highlighter = SyntaxHighlighter::new();
-        let mut options = HighlightOptions::default();
-        options.render_line_numbers = true;
+        let options = HighlightOptions {
+            render_line_numbers: true,
+            ..Default::default()
+        };
 
         let code = "let x = 42;";
         let output = highlighter
@@ -546,8 +548,10 @@ mod tests {
     #[test]
     fn test_truncation() {
         let highlighter = SyntaxHighlighter::new();
-        let mut options = HighlightOptions::default();
-        options.max_lines = Some(2);
+        let options = HighlightOptions {
+            max_lines: Some(2),
+            ..Default::default()
+        };
 
         let code = "line 1\nline 2\nline 3\nline 4";
         let output = highlighter
@@ -614,8 +618,10 @@ mod tests {
     #[tokio::test]
     async fn test_file_too_large() {
         let highlighter = SyntaxHighlighter::new();
-        let mut options = HighlightOptions::default();
-        options.max_bytes = Some(10); // set small limit
+        let options = HighlightOptions {
+            max_bytes: Some(10), // set small limit
+            ..Default::default()
+        };
 
         let mut temp_file = NamedTempFile::new().unwrap();
         writeln!(temp_file, "This content is longer than 10 bytes!").unwrap();

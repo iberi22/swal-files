@@ -296,19 +296,19 @@ fn parse_hunk(
             break;
         }
 
-        if line.starts_with('+') {
+        if let Some(stripped) = line.strip_prefix('+') {
             hunk_lines.push(DiffLine {
                 line_type: LineType::Addition,
-                content: line[1..].to_string(),
+                content: stripped.to_string(),
                 old_line_number: None,
                 new_line_number: Some(curr_new),
             });
             curr_new += 1;
             *total_additions += 1;
-        } else if line.starts_with('-') {
+        } else if let Some(stripped) = line.strip_prefix('-') {
             hunk_lines.push(DiffLine {
                 line_type: LineType::Deletion,
-                content: line[1..].to_string(),
+                content: stripped.to_string(),
                 old_line_number: Some(curr_old),
                 new_line_number: None,
             });
@@ -322,8 +322,8 @@ fn parse_hunk(
                 new_line_number: None,
             });
         } else if line.starts_with(' ') || line.is_empty() {
-            let content = if line.starts_with(' ') {
-                &line[1..]
+            let content = if let Some(stripped) = line.strip_prefix(' ') {
+                stripped
             } else {
                 line
             };

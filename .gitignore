@@ -68,3 +68,4 @@ SESSION_HANDOFF.md
 *.sqlite-shm
 *.profraw
 # <<< GITCORE PUBLIC REPO HARDENING <<<
+.gitcore/

@@ -13,7 +13,7 @@
     <img src="https://img.shields.io/badge/Design-Fluent_Mica_Acrylic-06b6d4?style=for-the-badge" alt="Design"/>
   </a>
   <a href="LICENSE">
-    <img src="https://img.shields.io/github/license/iberi22/swal-files?style=for-the-badge&color=f97316" alt="License"/>
+    <img src="https://img.shields.io/badge/License-AGPL_3.0-f97316?style=for-the-badge" alt="License"/>
   </a>
 </p>
 
@@ -47,9 +47,8 @@ swal-files/
 │   ├── swal-files-preview/     # QuickLook preview decoders (syntect, image, markdown)
 │   ├── swal-files-agent/       # Xavier Cognitive Memory REST/WebSocket client
 │   └── swal-files-app/         # GPU-accelerated UI application (Tabs, Omnibar, Sidebar, Views)
-├── .gitcore/                   # GitCore v3.8.0 specification & autonomous wave features
 ├── docs/                       # Architectural blueprints & benchmarks
-└── tests/                      # Visual E2E & unit test suites
+└── tests/                      # Integration test suites (test_agent_integration.rs, test_preview_integration.rs, test_watcher_integration.rs)
 ```
 
 ---
@@ -68,4 +67,4 @@ cargo run --release -p swal-files-app
 
 ## 📄 License
 
-Distributed under the **MIT License**. Created with ⚡ by **SouthWest AI Labs**.
+Distributed under the **GNU Affero General Public License v3.0**. Created with ⚡ by **SouthWest AI Labs**.

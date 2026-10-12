@@ -302,10 +302,10 @@ impl AutoTagger {
         };
 
         for rule in &self.rules {
-            if rule.matches(path, Some(file_size), snippet.as_deref()) {
-                if unique_tag_ids.insert(rule.tag.id.clone()) {
-                    matched_tags.push(rule.tag.clone());
-                }
+            if rule.matches(path, Some(file_size), snippet.as_deref())
+                && unique_tag_ids.insert(rule.tag.id.clone())
+            {
+                matched_tags.push(rule.tag.clone());
             }
         }
 
@@ -426,10 +426,10 @@ impl ParsedQuery {
         }
 
         // Check category filter
-        if !self.categories.is_empty() {
-            if !metadata.tags.iter().any(|t| self.categories.contains(&t.category)) {
-                return false;
-            }
+        if !self.categories.is_empty()
+            && !metadata.tags.iter().any(|t| self.categories.contains(&t.category))
+        {
+            return false;
         }
 
         // Check excluded terms

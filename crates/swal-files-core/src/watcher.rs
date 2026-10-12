@@ -288,7 +288,7 @@ mod tests {
         assert!(watcher.is_ok());
         let w = watcher.unwrap();
         assert!(w.watched_paths().is_empty());
-        assert_eq!(w.config().recursive, true);
+        assert!(w.config().recursive);
     }
 
     #[test]
@@ -451,11 +451,11 @@ mod tests {
         for _ in 0..20 {
             sleep(Duration::from_millis(50)).await;
             while let Ok(ev) = watcher.try_recv() {
-                if ev.path().file_name() == Some(std::ffi::OsStr::new("created_file.txt")) {
-                    if matches!(ev, FileWatchEvent::Deleted(_)) {
-                        delete_found = true;
-                        break;
-                    }
+                if ev.path().file_name() == Some(std::ffi::OsStr::new("created_file.txt"))
+                    && matches!(ev, FileWatchEvent::Deleted(_))
+                {
+                    delete_found = true;
+                    break;
                 }
             }
             if delete_found {

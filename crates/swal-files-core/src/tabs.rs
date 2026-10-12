@@ -7,9 +7,10 @@ use tokio::sync::mpsc::UnboundedSender;
 pub struct TabId(pub u64);
 
 /// Classification of tab content type.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum TabKind {
     /// Standard file browsing tab.
+    #[default]
     Standard,
     /// Git changes and diff viewer tab.
     Git,
@@ -21,40 +22,24 @@ pub enum TabKind {
     Custom(String),
 }
 
-impl Default for TabKind {
-    fn default() -> Self {
-        Self::Standard
-    }
-}
-
 /// Identifies the active pane in a dual-pane layout.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Default)]
 pub enum PaneId {
+    #[default]
     Left,
     Right,
 }
 
-impl Default for PaneId {
-    fn default() -> Self {
-        Self::Left
-    }
-}
-
 /// Defines the layout mode of the dual-pane system.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum DualPaneLayout {
     /// Single pane mode (only primary/left pane visible).
+    #[default]
     Single,
     /// Dual pane split horizontally (side-by-side).
     SplitHorizontal,
     /// Dual pane split vertically (top and bottom).
     SplitVertical,
-}
-
-impl Default for DualPaneLayout {
-    fn default() -> Self {
-        Self::Single
-    }
 }
 
 /// Events emitted during tab and pane state operations.

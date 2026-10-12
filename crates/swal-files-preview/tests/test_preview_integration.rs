@@ -22,7 +22,15 @@ impl PreviewIntegrationFixture {
             highlighter: SyntaxHighlighter::new(),
         }
     }
+}
 
+impl Default for PreviewIntegrationFixture {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl PreviewIntegrationFixture {
     pub fn path(&self, filename: &str) -> PathBuf {
         self.temp_dir.path().join(filename)
     }
@@ -175,8 +183,10 @@ fn test_error_resilience() {
     // File too large
     let big_path = fixture.path("large.txt");
     fs::write(&big_path, vec![b'a'; 1000]).unwrap();
-    let mut hl_opts = HighlightOptions::default();
-    hl_opts.max_bytes = Some(100);
+    let hl_opts = HighlightOptions {
+        max_bytes: Some(100),
+        ..Default::default()
+    };
 
     let rt = tokio::runtime::Runtime::new().unwrap();
     let err = rt.block_on(fixture.highlighter.highlight_file_async(&big_path, hl_opts));
