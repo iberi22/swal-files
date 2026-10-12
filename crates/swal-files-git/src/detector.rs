@@ -691,8 +691,8 @@ fn parse_git_config_upstreams(content: &str) -> HashMap<String, String> {
             merge = None;
 
             let section = &line[1..line.len() - 1];
-            if section.starts_with("branch ") {
-                let name = section["branch ".len()..]
+            if let Some(stripped) = section.strip_prefix("branch ") {
+                let name = stripped
                     .trim()
                     .trim_matches('"');
                 current_branch = Some(name.to_string());

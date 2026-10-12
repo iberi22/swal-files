@@ -518,12 +518,12 @@ UU src/conflict.rs\n\
             if st.success() {
                 // Config user in temp git repo
                 let _ = Command::new("git")
-                    .args(&["config", "user.name", "Test User"])
+                    .args(["config", "user.name", "Test User"])
                     .current_dir(temp_dir.path())
                     .status()
                     .await;
                 let _ = Command::new("git")
-                    .args(&["config", "user.email", "test@example.com"])
+                    .args(["config", "user.email", "test@example.com"])
                     .current_dir(temp_dir.path())
                     .status()
                     .await;

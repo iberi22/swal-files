@@ -268,7 +268,7 @@ impl DirectoryScanner {
                 // Check if we should descend recursively into subdirectories
                 if options.recursive && file_entry.is_dir() {
                     let can_descend = match options.max_depth {
-                        Some(max_d) => depth + 1 <= max_d,
+                        Some(max_d) => depth < max_d,
                         None => true,
                     };
                     if can_descend {

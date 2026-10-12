@@ -226,10 +226,8 @@ impl Omnibar {
         let intent = self.active_intent.clone();
         let trimmed = self.input.trim().to_string();
 
-        if !trimmed.is_empty() {
-            if self.history.last() != Some(&trimmed) {
-                self.history.push(trimmed);
-            }
+        if !trimmed.is_empty() && self.history.last() != Some(&trimmed) {
+            self.history.push(trimmed);
         }
 
         self.history_index = None;

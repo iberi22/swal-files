@@ -82,7 +82,7 @@ impl AudioPreviewer {
         let peaks = (0..num_bins).map(|bin| {
             let start = bin * chunk_size;
             let end = (start + chunk_size).min(bytes.len());
-            let max_diff = bytes[start..end].iter().map(|&b| (b as i16 - 128).abs() as u8).max().unwrap_or(0);
+            let max_diff = bytes[start..end].iter().map(|&b| (b as i16 - 128).unsigned_abs()).max().unwrap_or(0);
             (max_diff as f32 / 128.0).min(1.0)
         }).collect();
         Ok(WaveformSummary { peaks, sample_count: bytes.len(), duration_secs: meta.duration_secs.unwrap_or(0.0) })

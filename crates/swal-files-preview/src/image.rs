@@ -464,7 +464,7 @@ pub fn generate_ascii_art(bytes: &[u8], target_width: u32, target_height: u32) -
             let element_density = svg_text.matches('<').count();
             for y in 0..target_height {
                 for x in 0..target_width {
-                    let pattern = ((x * 7 + y * 13 + element_density * 3) % ascii_chars.len()) as usize;
+                    let pattern = (x * 7 + y * 13 + element_density * 3) % ascii_chars.len();
                     result.push(ascii_chars[pattern]);
                 }
                 result.push('\n');
@@ -658,18 +658,11 @@ fn url_encode(input: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::sync::Arc;
-    use std::task::{Context, Wake, Waker};
-
-    struct DummyWaker;
-
-    impl Wake for DummyWaker {
-        fn wake(self: Arc<Self>) {}
-    }
+    use std::task::{Context, Waker};
 
     fn block_on<F: std::future::Future>(future: F) -> F::Output {
-        let waker = Waker::from(Arc::new(DummyWaker));
-        let mut context = Context::from_waker(&waker);
+        let waker = Waker::noop();
+        let mut context = Context::from_waker(waker);
         let mut pinned = Box::pin(future);
         loop {
             if let std::task::Poll::Ready(val) = pinned.as_mut().poll(&mut context) {
