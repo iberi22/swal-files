@@ -17,7 +17,9 @@ pub enum MarkdownError {
 impl fmt::Display for MarkdownError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            MarkdownError::ProcessingFailed(msg) => write!(f, "Markdown processing failed: {}", msg),
+            MarkdownError::ProcessingFailed(msg) => {
+                write!(f, "Markdown processing failed: {}", msg)
+            }
             MarkdownError::UnsupportedStructure(msg) => write!(f, "Unsupported structure: {}", msg),
             MarkdownError::Unknown(msg) => write!(f, "Unknown Markdown error: {}", msg),
         }
@@ -54,7 +56,10 @@ pub struct MarkdownPreview {
 /// # Returns
 ///
 /// A `Result` containing the `MarkdownPreview` or a `MarkdownError`.
-pub fn parse_markdown_preview(input: &str, max_chars: usize) -> Result<MarkdownPreview, MarkdownError> {
+pub fn parse_markdown_preview(
+    input: &str,
+    max_chars: usize,
+) -> Result<MarkdownPreview, MarkdownError> {
     let mut title = None;
     let mut heading_count = 0;
     let mut code_block_count = 0;
@@ -72,7 +77,10 @@ pub fn parse_markdown_preview(input: &str, max_chars: usize) -> Result<MarkdownP
             // Check if the block ends
             let mut is_end = false;
             if trimmed.starts_with(current_fence_char) {
-                let fence_len = trimmed.chars().take_while(|&c| c == current_fence_char).count();
+                let fence_len = trimmed
+                    .chars()
+                    .take_while(|&c| c == current_fence_char)
+                    .count();
                 if fence_len >= current_fence_len {
                     is_end = true;
                 }
@@ -95,7 +103,10 @@ pub fn parse_markdown_preview(input: &str, max_chars: usize) -> Result<MarkdownP
         if trimmed.starts_with("```") || trimmed.starts_with("~~~") {
             in_code_block = true;
             current_fence_char = trimmed.chars().next().unwrap();
-            current_fence_len = trimmed.chars().take_while(|&c| c == current_fence_char).count();
+            current_fence_len = trimmed
+                .chars()
+                .take_while(|&c| c == current_fence_char)
+                .count();
             continue;
         }
 

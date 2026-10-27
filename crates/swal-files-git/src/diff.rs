@@ -58,7 +58,11 @@ impl FileDiff {
 
     /// Converts this unified file diff into a side-by-side diff format.
     pub fn to_side_by_side(&self) -> SideBySideDiff {
-        let side_hunks = self.hunks.iter().map(convert_hunk_to_side_by_side).collect();
+        let side_hunks = self
+            .hunks
+            .iter()
+            .map(convert_hunk_to_side_by_side)
+            .collect();
 
         SideBySideDiff {
             old_path: self.old_path.clone(),
@@ -180,7 +184,9 @@ pub async fn parse_git_diff_async(raw_diff: impl Into<String>) -> Result<Vec<Fil
 }
 
 /// Non-blocking async helper to parse side-by-side git diffs using Tokio blocking threadpool.
-pub async fn parse_side_by_side_async(raw_diff: impl Into<String>) -> Result<Vec<SideBySideDiff>, DiffError> {
+pub async fn parse_side_by_side_async(
+    raw_diff: impl Into<String>,
+) -> Result<Vec<SideBySideDiff>, DiffError> {
     let raw = raw_diff.into();
     tokio::task::spawn_blocking(move || GitDiffParser::parse_side_by_side(&raw))
         .await
@@ -658,37 +664,19 @@ rename to new_name.txt
         assert_eq!(hunk.lines.len(), 4);
 
         assert_eq!(hunk.lines[0].line_type, SideBySideLineType::Equal);
-        assert_eq!(
-            hunk.lines[0].left.as_ref().unwrap().content,
-            "context"
-        );
+        assert_eq!(hunk.lines[0].left.as_ref().unwrap().content, "context");
 
         assert_eq!(hunk.lines[1].line_type, SideBySideLineType::Modification);
-        assert_eq!(
-            hunk.lines[1].left.as_ref().unwrap().content,
-            "old_1"
-        );
-        assert_eq!(
-            hunk.lines[1].right.as_ref().unwrap().content,
-            "new_1"
-        );
+        assert_eq!(hunk.lines[1].left.as_ref().unwrap().content, "old_1");
+        assert_eq!(hunk.lines[1].right.as_ref().unwrap().content, "new_1");
 
         assert_eq!(hunk.lines[2].line_type, SideBySideLineType::Modification);
-        assert_eq!(
-            hunk.lines[2].left.as_ref().unwrap().content,
-            "old_2"
-        );
-        assert_eq!(
-            hunk.lines[2].right.as_ref().unwrap().content,
-            "new_2"
-        );
+        assert_eq!(hunk.lines[2].left.as_ref().unwrap().content, "old_2");
+        assert_eq!(hunk.lines[2].right.as_ref().unwrap().content, "new_2");
 
         assert_eq!(hunk.lines[3].line_type, SideBySideLineType::Addition);
         assert!(hunk.lines[3].left.is_none());
-        assert_eq!(
-            hunk.lines[3].right.as_ref().unwrap().content,
-            "new_3"
-        );
+        assert_eq!(hunk.lines[3].right.as_ref().unwrap().content, "new_3");
     }
 
     #[tokio::test]
@@ -708,7 +696,10 @@ rename to new_name.txt
 
         let sbs = parse_side_by_side_async(sample).await.unwrap();
         assert_eq!(sbs.len(), 1);
-        assert_eq!(sbs[0].hunks[0].lines[0].line_type, SideBySideLineType::Modification);
+        assert_eq!(
+            sbs[0].hunks[0].lines[0].line_type,
+            SideBySideLineType::Modification
+        );
     }
 
     #[test]

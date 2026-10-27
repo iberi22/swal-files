@@ -459,7 +459,11 @@ impl TabManager {
     pub fn duplicate_tab(&mut self, id: TabId) -> Option<TabId> {
         let (path, pos, kind) = {
             let tab = self.tabs.iter().find(|t| t.id == id)?;
-            (tab.path.clone(), self.tabs.iter().position(|t| t.id == id)?, tab.kind.clone())
+            (
+                tab.path.clone(),
+                self.tabs.iter().position(|t| t.id == id)?,
+                tab.kind.clone(),
+            )
         };
 
         let new_id = self.alloc_id();
@@ -551,7 +555,9 @@ impl DualPaneCoordinator {
     pub fn toggle_dual_pane(&mut self) -> DualPaneLayout {
         let new_layout = match self.layout {
             DualPaneLayout::Single => DualPaneLayout::SplitHorizontal,
-            DualPaneLayout::SplitHorizontal | DualPaneLayout::SplitVertical => DualPaneLayout::Single,
+            DualPaneLayout::SplitHorizontal | DualPaneLayout::SplitVertical => {
+                DualPaneLayout::Single
+            }
         };
         self.set_layout(new_layout);
         new_layout
@@ -731,7 +737,10 @@ mod tests {
         let path4 = PathBuf::from("/home/user/folder4");
         tab.navigate_to(&path4);
 
-        assert_eq!(tab.history, vec![path1.clone(), path2.clone(), path4.clone()]);
+        assert_eq!(
+            tab.history,
+            vec![path1.clone(), path2.clone(), path4.clone()]
+        );
         assert_eq!(tab.history_index, 2);
         assert!(!tab.can_go_forward());
     }
@@ -870,11 +879,22 @@ mod tests {
 
         coord.toggle_dual_pane();
         let ev1 = rx.recv().await;
-        assert_eq!(ev1, Some(TabEvent::PaneLayoutChanged { layout: DualPaneLayout::SplitHorizontal }));
+        assert_eq!(
+            ev1,
+            Some(TabEvent::PaneLayoutChanged {
+                layout: DualPaneLayout::SplitHorizontal
+            })
+        );
 
         coord.active_tab_manager_mut().open_tab("/home/user/new");
         let ev2 = rx.recv().await;
-        assert!(matches!(ev2, Some(TabEvent::Opened { pane_id: PaneId::Left, .. })));
+        assert!(matches!(
+            ev2,
+            Some(TabEvent::Opened {
+                pane_id: PaneId::Left,
+                ..
+            })
+        ));
     }
 
     #[test]
@@ -883,10 +903,14 @@ mod tests {
         let coord = DualPaneCoordinator::new(&root);
 
         let json = serde_json::to_string(&coord).expect("serialization failed");
-        let deserialized: DualPaneCoordinator = serde_json::from_str(&json).expect("deserialization failed");
+        let deserialized: DualPaneCoordinator =
+            serde_json::from_str(&json).expect("deserialization failed");
 
         assert_eq!(deserialized.active_pane, coord.active_pane);
         assert_eq!(deserialized.layout, coord.layout);
-        assert_eq!(deserialized.left_pane.tabs().len(), coord.left_pane.tabs().len());
+        assert_eq!(
+            deserialized.left_pane.tabs().len(),
+            coord.left_pane.tabs().len()
+        );
     }
 }

@@ -49,14 +49,20 @@ impl MenuItem {
     }
 
     pub fn with_shortcut(mut self, shortcut_str: impl Into<String>) -> Self {
-        if let Self::Action { ref mut shortcut, .. } = self {
+        if let Self::Action {
+            ref mut shortcut, ..
+        } = self
+        {
             *shortcut = Some(shortcut_str.into());
         }
         self
     }
 
     pub fn disabled(mut self) -> Self {
-        if let Self::Action { ref mut enabled, .. } = self {
+        if let Self::Action {
+            ref mut enabled, ..
+        } = self
+        {
             *enabled = false;
         }
         self
@@ -162,21 +168,44 @@ impl ContextMenuBuilder {
 
         if context.is_empty_space() {
             builder = builder
-                .add_item(MenuItem::action("New File", MenuActionKind::NewFile).with_shortcut("Ctrl+N"))
-                .add_item(MenuItem::action("New Folder", MenuActionKind::NewFolder).with_shortcut("Ctrl+Shift+N"))
+                .add_item(
+                    MenuItem::action("New File", MenuActionKind::NewFile).with_shortcut("Ctrl+N"),
+                )
+                .add_item(
+                    MenuItem::action("New Folder", MenuActionKind::NewFolder)
+                        .with_shortcut("Ctrl+Shift+N"),
+                )
                 .add_separator();
 
-            let paste_item = MenuItem::action("Paste", MenuActionKind::Paste).with_shortcut("Ctrl+V");
-            let paste_item = if context.has_clipboard { paste_item } else { paste_item.disabled() };
+            let paste_item =
+                MenuItem::action("Paste", MenuActionKind::Paste).with_shortcut("Ctrl+V");
+            let paste_item = if context.has_clipboard {
+                paste_item
+            } else {
+                paste_item.disabled()
+            };
             builder = builder.add_item(paste_item).add_separator();
 
             builder = builder
-                .add_item(MenuItem::action("Ask Xavier AI", MenuActionKind::XavierPrompt("Explain directory contents".into())).with_shortcut("Ctrl+I"))
+                .add_item(
+                    MenuItem::action(
+                        "Ask Xavier AI",
+                        MenuActionKind::XavierPrompt("Explain directory contents".into()),
+                    )
+                    .with_shortcut("Ctrl+I"),
+                )
                 .add_separator()
                 .add_item(MenuItem::action("Refresh", MenuActionKind::Refresh).with_shortcut("F5"))
-                .add_item(MenuItem::action("Properties", MenuActionKind::Properties).with_shortcut("Alt+Enter"));
+                .add_item(
+                    MenuItem::action("Properties", MenuActionKind::Properties)
+                        .with_shortcut("Alt+Enter"),
+                );
         } else if context.selected_paths.len() == 1 {
-            let open_label = if context.is_directory { "Open Directory" } else { "Open File" };
+            let open_label = if context.is_directory {
+                "Open Directory"
+            } else {
+                "Open File"
+            };
             builder = builder
                 .add_item(MenuItem::action(open_label, MenuActionKind::Open).with_shortcut("Enter"))
                 .add_separator()
@@ -184,23 +213,39 @@ impl ContextMenuBuilder {
                 .add_item(MenuItem::action("Copy", MenuActionKind::Copy).with_shortcut("Ctrl+C"));
 
             if context.is_directory {
-                let paste_item = MenuItem::action("Paste Into", MenuActionKind::Paste).with_shortcut("Ctrl+V");
-                let paste_item = if context.has_clipboard { paste_item } else { paste_item.disabled() };
+                let paste_item =
+                    MenuItem::action("Paste Into", MenuActionKind::Paste).with_shortcut("Ctrl+V");
+                let paste_item = if context.has_clipboard {
+                    paste_item
+                } else {
+                    paste_item.disabled()
+                };
                 builder = builder.add_item(paste_item);
             }
 
             builder = builder
-                .add_item(MenuItem::action("Copy Path", MenuActionKind::CopyPath).with_shortcut("Ctrl+Shift+C"))
+                .add_item(
+                    MenuItem::action("Copy Path", MenuActionKind::CopyPath)
+                        .with_shortcut("Ctrl+Shift+C"),
+                )
                 .add_separator()
                 .add_item(MenuItem::action("Rename", MenuActionKind::Rename).with_shortcut("F2"))
-                .add_item(MenuItem::action("Delete", MenuActionKind::Delete).with_shortcut("Delete"))
+                .add_item(
+                    MenuItem::action("Delete", MenuActionKind::Delete).with_shortcut("Delete"),
+                )
                 .add_separator();
 
             if context.is_git_tracked {
                 if context.is_git_staged {
-                    builder = builder.add_item(MenuItem::action("Unstage Git Change", MenuActionKind::GitUnstage));
+                    builder = builder.add_item(MenuItem::action(
+                        "Unstage Git Change",
+                        MenuActionKind::GitUnstage,
+                    ));
                 } else {
-                    builder = builder.add_item(MenuItem::action("Stage Git Change", MenuActionKind::GitStage));
+                    builder = builder.add_item(MenuItem::action(
+                        "Stage Git Change",
+                        MenuActionKind::GitStage,
+                    ));
                 }
                 builder = builder.add_separator();
             }
@@ -211,30 +256,50 @@ impl ContextMenuBuilder {
                 .unwrap_or("selection");
             let xavier_prompt = format!("Analyze {}", target_name);
             builder = builder
-                .add_item(MenuItem::action("Ask Xavier AI", MenuActionKind::XavierPrompt(xavier_prompt)).with_shortcut("Ctrl+I"))
+                .add_item(
+                    MenuItem::action("Ask Xavier AI", MenuActionKind::XavierPrompt(xavier_prompt))
+                        .with_shortcut("Ctrl+I"),
+                )
                 .add_separator()
-                .add_item(MenuItem::action("Properties", MenuActionKind::Properties).with_shortcut("Alt+Enter"));
+                .add_item(
+                    MenuItem::action("Properties", MenuActionKind::Properties)
+                        .with_shortcut("Alt+Enter"),
+                );
         } else {
             let count = context.selected_paths.len();
             builder = builder
-                .add_item(MenuItem::action(format!("Open ({})", count), MenuActionKind::Open))
+                .add_item(MenuItem::action(
+                    format!("Open ({})", count),
+                    MenuActionKind::Open,
+                ))
                 .add_separator()
                 .add_item(MenuItem::action("Cut", MenuActionKind::Cut).with_shortcut("Ctrl+X"))
                 .add_item(MenuItem::action("Copy", MenuActionKind::Copy).with_shortcut("Ctrl+C"))
-                .add_item(MenuItem::action("Delete", MenuActionKind::Delete).with_shortcut("Delete"))
+                .add_item(
+                    MenuItem::action("Delete", MenuActionKind::Delete).with_shortcut("Delete"),
+                )
                 .add_separator();
 
             if context.is_git_tracked {
                 if context.is_git_staged {
-                    builder = builder.add_item(MenuItem::action("Unstage All Selected", MenuActionKind::GitUnstage));
+                    builder = builder.add_item(MenuItem::action(
+                        "Unstage All Selected",
+                        MenuActionKind::GitUnstage,
+                    ));
                 } else {
-                    builder = builder.add_item(MenuItem::action("Stage All Selected", MenuActionKind::GitStage));
+                    builder = builder.add_item(MenuItem::action(
+                        "Stage All Selected",
+                        MenuActionKind::GitStage,
+                    ));
                 }
                 builder = builder.add_separator();
             }
 
             let xavier_prompt = format!("Analyze {} selected items", count);
-            builder = builder.add_item(MenuItem::action("Ask Xavier AI", MenuActionKind::XavierPrompt(xavier_prompt)).with_shortcut("Ctrl+I"));
+            builder = builder.add_item(
+                MenuItem::action("Ask Xavier AI", MenuActionKind::XavierPrompt(xavier_prompt))
+                    .with_shortcut("Ctrl+I"),
+            );
         }
 
         builder.build()
@@ -313,6 +378,8 @@ mod tests {
 
         let menu = ContextMenuBuilder::build_for_selection(&ctx);
         assert!(menu.iter().any(|m| m.label() == Some("Open (2)")));
-        assert!(menu.iter().any(|m| m.label() == Some("Unstage All Selected")));
+        assert!(menu
+            .iter()
+            .any(|m| m.label() == Some("Unstage All Selected")));
     }
 }

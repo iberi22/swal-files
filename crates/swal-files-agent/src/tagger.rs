@@ -43,7 +43,12 @@ pub struct Tag {
 }
 
 impl Tag {
-    pub fn new(id: impl Into<String>, name: impl Into<String>, color: TagColor, category: TagCategory) -> Self {
+    pub fn new(
+        id: impl Into<String>,
+        name: impl Into<String>,
+        color: TagColor,
+        category: TagCategory,
+    ) -> Self {
         Self {
             id: id.into(),
             name: name.into(),
@@ -97,7 +102,12 @@ impl TagRule {
         self
     }
 
-    pub fn matches(&self, path: &Path, file_size: Option<u64>, content_snippet: Option<&str>) -> bool {
+    pub fn matches(
+        &self,
+        path: &Path,
+        file_size: Option<u64>,
+        content_snippet: Option<&str>,
+    ) -> bool {
         // Extension check
         if !self.extensions.is_empty() {
             if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
@@ -207,80 +217,149 @@ impl AutoTagger {
     fn load_default_rules(&mut self) {
         // Rust / Source Code
         self.add_rule(
-            TagRule::new(Tag::new("code-rs", "Rust Code", TagColor::Orange, TagCategory::Code))
-                .with_extensions(&["rs"]),
+            TagRule::new(Tag::new(
+                "code-rs",
+                "Rust Code",
+                TagColor::Orange,
+                TagCategory::Code,
+            ))
+            .with_extensions(&["rs"]),
         );
 
         // General Code
         self.add_rule(
-            TagRule::new(Tag::new("code-source", "Source Code", TagColor::Blue, TagCategory::Code))
-                .with_extensions(&["py", "js", "ts", "jsx", "tsx", "c", "cpp", "h", "hpp", "go", "java", "kt", "rb", "php", "sh", "bash"]),
+            TagRule::new(Tag::new(
+                "code-source",
+                "Source Code",
+                TagColor::Blue,
+                TagCategory::Code,
+            ))
+            .with_extensions(&[
+                "py", "js", "ts", "jsx", "tsx", "c", "cpp", "h", "hpp", "go", "java", "kt", "rb",
+                "php", "sh", "bash",
+            ]),
         );
 
         // Documents
         self.add_rule(
-            TagRule::new(Tag::new("doc-markdown", "Markdown", TagColor::Purple, TagCategory::Document))
-                .with_extensions(&["md", "markdown"]),
+            TagRule::new(Tag::new(
+                "doc-markdown",
+                "Markdown",
+                TagColor::Purple,
+                TagCategory::Document,
+            ))
+            .with_extensions(&["md", "markdown"]),
         );
 
         self.add_rule(
-            TagRule::new(Tag::new("doc-pdf", "PDF Document", TagColor::Red, TagCategory::Document))
-                .with_extensions(&["pdf"]),
+            TagRule::new(Tag::new(
+                "doc-pdf",
+                "PDF Document",
+                TagColor::Red,
+                TagCategory::Document,
+            ))
+            .with_extensions(&["pdf"]),
         );
 
         self.add_rule(
-            TagRule::new(Tag::new("doc-office", "Office Document", TagColor::Blue, TagCategory::Document))
-                .with_extensions(&["docx", "doc", "xlsx", "xls", "pptx", "ppt", "odt"]),
+            TagRule::new(Tag::new(
+                "doc-office",
+                "Office Document",
+                TagColor::Blue,
+                TagCategory::Document,
+            ))
+            .with_extensions(&["docx", "doc", "xlsx", "xls", "pptx", "ppt", "odt"]),
         );
 
         // Images
         self.add_rule(
-            TagRule::new(Tag::new("media-image", "Image", TagColor::Green, TagCategory::Image))
-                .with_extensions(&["png", "jpg", "jpeg", "gif", "webp", "svg", "bmp", "ico", "tiff"]),
+            TagRule::new(Tag::new(
+                "media-image",
+                "Image",
+                TagColor::Green,
+                TagCategory::Image,
+            ))
+            .with_extensions(&[
+                "png", "jpg", "jpeg", "gif", "webp", "svg", "bmp", "ico", "tiff",
+            ]),
         );
 
         // Audio
         self.add_rule(
-            TagRule::new(Tag::new("media-audio", "Audio", TagColor::Yellow, TagCategory::Audio))
-                .with_extensions(&["mp3", "wav", "flac", "aac", "ogg", "m4a"]),
+            TagRule::new(Tag::new(
+                "media-audio",
+                "Audio",
+                TagColor::Yellow,
+                TagCategory::Audio,
+            ))
+            .with_extensions(&["mp3", "wav", "flac", "aac", "ogg", "m4a"]),
         );
 
         // Video
         self.add_rule(
-            TagRule::new(Tag::new("media-video", "Video", TagColor::Red, TagCategory::Video))
-                .with_extensions(&["mp4", "mkv", "avi", "mov", "webm", "flv"]),
+            TagRule::new(Tag::new(
+                "media-video",
+                "Video",
+                TagColor::Red,
+                TagCategory::Video,
+            ))
+            .with_extensions(&["mp4", "mkv", "avi", "mov", "webm", "flv"]),
         );
 
         // Archives
         self.add_rule(
-            TagRule::new(Tag::new("archive", "Archive", TagColor::Gray, TagCategory::Archive))
-                .with_extensions(&["zip", "tar", "gz", "bz2", "xz", "7z", "rar", "tgz"]),
+            TagRule::new(Tag::new(
+                "archive",
+                "Archive",
+                TagColor::Gray,
+                TagCategory::Archive,
+            ))
+            .with_extensions(&["zip", "tar", "gz", "bz2", "xz", "7z", "rar", "tgz"]),
         );
 
         // Configuration
         self.add_rule(
-            TagRule::new(Tag::new("config", "Configuration", TagColor::Yellow, TagCategory::Config))
-                .with_extensions(&["json", "toml", "yaml", "yml", "xml", "ini", "env"]),
+            TagRule::new(Tag::new(
+                "config",
+                "Configuration",
+                TagColor::Yellow,
+                TagCategory::Config,
+            ))
+            .with_extensions(&["json", "toml", "yaml", "yml", "xml", "ini", "env"]),
         );
 
         // Hidden / System files
         self.add_rule(
-            TagRule::new(Tag::new("system-dot", "Dotfile", TagColor::Gray, TagCategory::System))
-                .with_name_patterns(&[".gitignore", ".env", ".bashrc", ".zshrc"]),
+            TagRule::new(Tag::new(
+                "system-dot",
+                "Dotfile",
+                TagColor::Gray,
+                TagCategory::System,
+            ))
+            .with_name_patterns(&[".gitignore", ".env", ".bashrc", ".zshrc"]),
         );
 
         // Large Files (> 100 MB)
         self.add_rule(
-            TagRule::new(Tag::new("large-file", "Large File", TagColor::Red, TagCategory::Other("Storage".into())))
-                .with_size_range(Some(100 * 1024 * 1024), None),
+            TagRule::new(Tag::new(
+                "large-file",
+                "Large File",
+                TagColor::Red,
+                TagCategory::Other("Storage".into()),
+            ))
+            .with_size_range(Some(100 * 1024 * 1024), None),
         );
     }
 
     /// Tag a single file asynchronously using Tokio non-blocking file metadata inspection.
     pub async fn tag_file_async(&self, path: &Path) -> Result<TaggedFile, TaggerError> {
-        let metadata = fs::metadata(path)
-            .await
-            .map_err(|e| TaggerError::IoError(format!("Failed to read metadata for {}: {}", path.display(), e)))?;
+        let metadata = fs::metadata(path).await.map_err(|e| {
+            TaggerError::IoError(format!(
+                "Failed to read metadata for {}: {}",
+                path.display(),
+                e
+            ))
+        })?;
 
         let file_size = metadata.len();
         let mut matched_tags = Vec::new();
@@ -289,8 +368,14 @@ impl AutoTagger {
         // Optionally read a small snippet for text/markdown files
         let snippet = if file_size < 64 * 1024 {
             if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
-                if matches!(ext.to_lowercase().as_str(), "txt" | "md" | "json" | "toml" | "rs" | "py" | "js") {
-                    fs::read_to_string(path).await.ok().map(|s| s.chars().take(1024).collect::<String>())
+                if matches!(
+                    ext.to_lowercase().as_str(),
+                    "txt" | "md" | "json" | "toml" | "rs" | "py" | "js"
+                ) {
+                    fs::read_to_string(path)
+                        .await
+                        .ok()
+                        .map(|s| s.chars().take(1024).collect::<String>())
                 } else {
                     None
                 }
@@ -320,7 +405,10 @@ impl AutoTagger {
     }
 
     /// Tag multiple paths concurrently using Tokio async tasks.
-    pub async fn tag_paths_batch_async(&self, paths: &[PathBuf]) -> Vec<Result<TaggedFile, TaggerError>> {
+    pub async fn tag_paths_batch_async(
+        &self,
+        paths: &[PathBuf],
+    ) -> Vec<Result<TaggedFile, TaggerError>> {
         let self_arc = Arc::new(self.clone());
         let mut tasks = Vec::with_capacity(paths.len());
 
@@ -336,7 +424,9 @@ impl AutoTagger {
         for task in tasks {
             match task.await {
                 Ok(res) => results.push(res),
-                Err(e) => results.push(Err(TaggerError::IoError(format!("Task join error: {}", e)))),
+                Err(e) => {
+                    results.push(Err(TaggerError::IoError(format!("Task join error: {}", e))))
+                }
             }
         }
 
@@ -381,7 +471,11 @@ impl ParsedQuery {
     pub fn matches(&self, metadata: &FileMetadata) -> bool {
         // Check extensions filter
         if !self.extensions.is_empty() {
-            let ext = metadata.path.extension().and_then(|e| e.to_str()).unwrap_or("");
+            let ext = metadata
+                .path
+                .extension()
+                .and_then(|e| e.to_str())
+                .unwrap_or("");
             if !self.extensions.iter().any(|e| e.eq_ignore_ascii_case(ext)) {
                 return false;
             }
@@ -420,14 +514,21 @@ impl ParsedQuery {
                 .chain(metadata.tags.iter().map(|t| t.id.to_lowercase()))
                 .collect();
 
-            if !self.tags.iter().any(|req_tag| file_tag_names.contains(&req_tag.to_lowercase())) {
+            if !self
+                .tags
+                .iter()
+                .any(|req_tag| file_tag_names.contains(&req_tag.to_lowercase()))
+            {
                 return false;
             }
         }
 
         // Check category filter
         if !self.categories.is_empty()
-            && !metadata.tags.iter().any(|t| self.categories.contains(&t.category))
+            && !metadata
+                .tags
+                .iter()
+                .any(|t| self.categories.contains(&t.category))
         {
             return false;
         }
@@ -567,14 +668,20 @@ impl NlQueryParser {
                 if let Some(bytes) = Self::parse_size(size_str) {
                     max_size = Some(bytes);
                 }
-            } else if token_lower == "larger" && i + 2 < tokens.len() && tokens[i + 1].to_lowercase() == "than" {
+            } else if token_lower == "larger"
+                && i + 2 < tokens.len()
+                && tokens[i + 1].to_lowercase() == "than"
+            {
                 if let Some(bytes) = Self::parse_size(tokens[i + 2]) {
                     min_size = Some(bytes);
                     i += 2;
                 } else {
                     text_tokens.push(token);
                 }
-            } else if token_lower == "smaller" && i + 2 < tokens.len() && tokens[i + 1].to_lowercase() == "than" {
+            } else if token_lower == "smaller"
+                && i + 2 < tokens.len()
+                && tokens[i + 1].to_lowercase() == "than"
+            {
                 if let Some(bytes) = Self::parse_size(tokens[i + 2]) {
                     max_size = Some(bytes);
                     i += 2;
@@ -589,7 +696,10 @@ impl NlQueryParser {
                 }
             } else if token_lower == "today" {
                 modified_within = Some(Duration::from_secs(24 * 3600));
-            } else if token_lower == "yesterday" || token_lower == "this-week" || token_lower == "recent" {
+            } else if token_lower == "yesterday"
+                || token_lower == "this-week"
+                || token_lower == "recent"
+            {
                 modified_within = Some(Duration::from_secs(7 * 24 * 3600));
             } else if let Some(sort_str) = token_lower.strip_prefix("sort:") {
                 match sort_str {
@@ -637,9 +747,13 @@ impl NlQueryParser {
     fn parse_size(s: &str) -> Option<u64> {
         let s = s.to_lowercase();
         if let Some(num) = s.strip_suffix("gb") {
-            num.parse::<f64>().ok().map(|n| (n * 1024.0 * 1024.0 * 1024.0) as u64)
+            num.parse::<f64>()
+                .ok()
+                .map(|n| (n * 1024.0 * 1024.0 * 1024.0) as u64)
         } else if let Some(num) = s.strip_suffix("mb") {
-            num.parse::<f64>().ok().map(|n| (n * 1024.0 * 1024.0) as u64)
+            num.parse::<f64>()
+                .ok()
+                .map(|n| (n * 1024.0 * 1024.0) as u64)
         } else if let Some(num) = s.strip_suffix("kb") {
             num.parse::<f64>().ok().map(|n| (n * 1024.0) as u64)
         } else if let Some(num) = s.strip_suffix('b') {
@@ -681,7 +795,10 @@ mod tests {
         let temp_file1 = NamedTempFile::with_suffix(".rs").unwrap();
         let temp_file2 = NamedTempFile::with_suffix(".png").unwrap();
 
-        let paths = vec![temp_file1.path().to_path_buf(), temp_file2.path().to_path_buf()];
+        let paths = vec![
+            temp_file1.path().to_path_buf(),
+            temp_file2.path().to_path_buf(),
+        ];
         let results = tagger.tag_paths_batch_async(&paths).await;
 
         assert_eq!(results.len(), 2);

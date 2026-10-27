@@ -380,7 +380,9 @@ mod tests {
         let dir = tempdir().unwrap();
         let dir_path = dir.path();
 
-        write(dir_path.join("visible.txt"), "content").await.unwrap();
+        write(dir_path.join("visible.txt"), "content")
+            .await
+            .unwrap();
         write(dir_path.join(".hidden.txt"), "secret").await.unwrap();
 
         // Without hidden files
@@ -423,7 +425,9 @@ mod tests {
         let dir_path = dir.path();
 
         write(dir_path.join("small.txt"), "a").await.unwrap();
-        write(dir_path.join("large.txt"), "a long paragraph").await.unwrap();
+        write(dir_path.join("large.txt"), "a long paragraph")
+            .await
+            .unwrap();
 
         // Sort by size ascending
         let opts_size = ScanOptions::default()
