@@ -15,6 +15,9 @@
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/License-AGPL_3.0-f97316?style=for-the-badge" alt="License"/>
   </a>
+  <a href="https://github.com/iberi22/swal-files/actions/workflows/ci.yml">
+    <img src="https://github.com/iberi22/swal-files/actions/workflows/ci.yml/badge.svg" alt="CI"/>
+  </a>
 </p>
 
 ---
@@ -62,6 +65,12 @@ cargo test --workspace
 # Launch standalone GUI
 cargo run --release -p swal-files-app
 ```
+
+---
+
+## 🔒 Security
+
+For information on supported versions and how to report vulnerabilities, please see our [Security Policy](SECURITY.md).
 
 ---
 

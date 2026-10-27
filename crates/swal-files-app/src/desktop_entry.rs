@@ -25,7 +25,10 @@ impl HyprlandWindowRule {
 
     /// Formats the rule into Hyprland config line syntax (`windowrulev2 = <rule_type>, class:^({class_pattern})$`).
     pub fn to_config_line(&self) -> String {
-        format!("windowrulev2 = {}, class:^({})$", self.rule_type, self.class_pattern)
+        format!(
+            "windowrulev2 = {}, class:^({})$",
+            self.rule_type, self.class_pattern
+        )
     }
 }
 
@@ -68,7 +71,12 @@ impl DesktopIntegration {
 
     /// Generates XDG `.desktop` file content using the integration config.
     pub fn generate_desktop_entry(&self) -> String {
-        generate_desktop_file(&self.app_name, &self.exec_cmd, &self.icon_name, &self.mime_types)
+        generate_desktop_file(
+            &self.app_name,
+            &self.exec_cmd,
+            &self.icon_name,
+            &self.mime_types,
+        )
     }
 
     /// Generates Hyprland window rules presets for floating or tiling modes.
@@ -143,12 +151,18 @@ mod tests {
     #[test]
     fn test_hyprland_window_rule_formatting() {
         let rule = HyprlandWindowRule::new("swal-files", "float");
-        assert_eq!(rule.to_config_line(), "windowrulev2 = float, class:^(swal-files)$");
+        assert_eq!(
+            rule.to_config_line(),
+            "windowrulev2 = float, class:^(swal-files)$"
+        );
     }
 
     #[test]
     fn test_generate_desktop_file() {
-        let mimes = vec!["inode/directory".to_string(), "x-scheme-handler/file".to_string()];
+        let mimes = vec![
+            "inode/directory".to_string(),
+            "x-scheme-handler/file".to_string(),
+        ];
         let content = generate_desktop_file("SWAL Files", "swal-files %U", "folder-open", &mimes);
 
         assert!(content.contains("[Desktop Entry]"));
@@ -163,11 +177,17 @@ mod tests {
         let integration = DesktopIntegration::default();
         let floating_rules = integration.generate_hyprland_rules(true);
         assert_eq!(floating_rules.len(), 3);
-        assert_eq!(floating_rules[0].to_config_line(), "windowrulev2 = float, class:^(swal-files)$");
+        assert_eq!(
+            floating_rules[0].to_config_line(),
+            "windowrulev2 = float, class:^(swal-files)$"
+        );
 
         let tiling_rules = integration.generate_hyprland_rules(false);
         assert_eq!(tiling_rules.len(), 1);
-        assert_eq!(tiling_rules[0].to_config_line(), "windowrulev2 = tile, class:^(swal-files)$");
+        assert_eq!(
+            tiling_rules[0].to_config_line(),
+            "windowrulev2 = tile, class:^(swal-files)$"
+        );
     }
 
     #[test]

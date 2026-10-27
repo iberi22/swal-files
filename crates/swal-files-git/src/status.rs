@@ -77,7 +77,11 @@ pub struct FileStatus {
 }
 
 impl FileStatus {
-    pub fn new(path: impl Into<PathBuf>, index_status: GitStatusKind, worktree_status: GitStatusKind) -> Self {
+    pub fn new(
+        path: impl Into<PathBuf>,
+        index_status: GitStatusKind,
+        worktree_status: GitStatusKind,
+    ) -> Self {
         Self {
             path: path.into(),
             orig_path: None,
@@ -115,11 +119,13 @@ impl FileStatus {
     }
 
     pub fn is_untracked(&self) -> bool {
-        self.index_status == GitStatusKind::Untracked || self.worktree_status == GitStatusKind::Untracked
+        self.index_status == GitStatusKind::Untracked
+            || self.worktree_status == GitStatusKind::Untracked
     }
 
     pub fn is_conflicted(&self) -> bool {
-        self.index_status == GitStatusKind::Conflicted || self.worktree_status == GitStatusKind::Conflicted
+        self.index_status == GitStatusKind::Conflicted
+            || self.worktree_status == GitStatusKind::Conflicted
     }
 }
 
@@ -157,7 +163,9 @@ impl GitWorkingTreeStatus {
 
     pub fn get_status_for_path<P: AsRef<Path>>(&self, path: P) -> Option<&FileStatus> {
         let p = path.as_ref();
-        self.files.iter().find(|f| f.path == p || f.orig_path.as_deref() == Some(p))
+        self.files
+            .iter()
+            .find(|f| f.path == p || f.orig_path.as_deref() == Some(p))
     }
 }
 
@@ -192,7 +200,10 @@ pub async fn read_working_tree_status<P: AsRef<Path>>(
     repo_path: P,
 ) -> Result<GitWorkingTreeStatus, GitStatusError> {
     let path = repo_path.as_ref();
-    if !crate::detector::GitDetector::new().is_git_repository(path).await {
+    if !crate::detector::GitDetector::new()
+        .is_git_repository(path)
+        .await
+    {
         return Err(GitStatusError::NotAGitRepository(path.to_path_buf()));
     }
 
@@ -248,11 +259,9 @@ pub fn parse_porcelain_v2(output: &str) -> Result<GitWorkingTreeStatus, GitStatu
                 let xy = parts[1];
                 let file_path = parts[8];
                 let (index_st, work_st) = parse_xy(xy);
-                status.files.push(FileStatus::new(
-                    file_path,
-                    index_st,
-                    work_st,
-                ));
+                status
+                    .files
+                    .push(FileStatus::new(file_path, index_st, work_st));
             }
             '2' => {
                 // Renamed or copied entry: 2 <XY> <sub> <mH> <mI> <mW> <hH> <hI> <Xscore> <path><TAB><origPath>
@@ -266,7 +275,8 @@ pub fn parse_porcelain_v2(output: &str) -> Result<GitWorkingTreeStatus, GitStatu
                 }
                 let xy = parts[1];
                 let paths_part = parts[9];
-                let (path_str, orig_path_str) = if let Some((p, orig)) = paths_part.split_once('\t') {
+                let (path_str, orig_path_str) = if let Some((p, orig)) = paths_part.split_once('\t')
+                {
                     (p, orig)
                 } else if let Some((p, orig)) = paths_part.split_once(' ') {
                     (p, orig)
@@ -276,7 +286,9 @@ pub fn parse_porcelain_v2(output: &str) -> Result<GitWorkingTreeStatus, GitStatu
 
                 let (index_st, work_st) = parse_xy(xy);
                 if orig_path_str.is_empty() {
-                    status.files.push(FileStatus::new(path_str, index_st, work_st));
+                    status
+                        .files
+                        .push(FileStatus::new(path_str, index_st, work_st));
                 } else {
                     status.files.push(FileStatus::with_orig_path(
                         path_str,
@@ -361,8 +373,14 @@ fn parse_header_line(line: &str, branch: &mut BranchStatus) -> Result<(), GitSta
 
 fn parse_xy(xy: &str) -> (GitStatusKind, GitStatusKind) {
     let mut chars = xy.chars();
-    let x = chars.next().map(GitStatusKind::from_char).unwrap_or(GitStatusKind::Unmodified);
-    let y = chars.next().map(GitStatusKind::from_char).unwrap_or(GitStatusKind::Unmodified);
+    let x = chars
+        .next()
+        .map(GitStatusKind::from_char)
+        .unwrap_or(GitStatusKind::Unmodified);
+    let y = chars
+        .next()
+        .map(GitStatusKind::from_char)
+        .unwrap_or(GitStatusKind::Unmodified);
     (x, y)
 }
 
@@ -396,7 +414,14 @@ pub fn parse_porcelain_v1(output: &str) -> Result<GitWorkingTreeStatus, GitStatu
             continue;
         }
 
-        if xy == "DD" || xy == "AU" || xy == "UD" || xy == "UA" || xy == "DU" || xy == "AA" || xy == "UU" {
+        if xy == "DD"
+            || xy == "AU"
+            || xy == "UD"
+            || xy == "UA"
+            || xy == "DU"
+            || xy == "AA"
+            || xy == "UU"
+        {
             status.files.push(FileStatus::new(
                 rest,
                 GitStatusKind::Conflicted,
@@ -409,18 +434,11 @@ pub fn parse_porcelain_v1(output: &str) -> Result<GitWorkingTreeStatus, GitStatu
 
         if let Some((path_str, orig_str)) = rest.split_once(" -> ") {
             status.files.push(FileStatus::with_orig_path(
-                path_str,
-                orig_str,
-                index_st,
-                work_st,
+                path_str, orig_str, index_st, work_st,
             ));
         } else {
             let path = rest.trim_matches('"');
-            status.files.push(FileStatus::new(
-                path,
-                index_st,
-                work_st,
-            ));
+            status.files.push(FileStatus::new(path, index_st, work_st));
         }
     }
 
@@ -456,7 +474,10 @@ u UU N... 100644 100644 100644 100644 e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 e
         let status = parse_porcelain_v2(sample).expect("Should parse v2 output successfully");
 
         assert_eq!(status.branch.head.as_deref(), Some("main"));
-        assert_eq!(status.branch.oid.as_deref(), Some("1234567890abcdef1234567890abcdef12345678"));
+        assert_eq!(
+            status.branch.oid.as_deref(),
+            Some("1234567890abcdef1234567890abcdef12345678")
+        );
         assert_eq!(status.branch.upstream.as_deref(), Some("origin/main"));
         assert_eq!(status.branch.ahead, 2);
         assert_eq!(status.branch.behind, 1);
@@ -470,12 +491,19 @@ u UU N... 100644 100644 100644 100644 e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 e
         assert_eq!(status.untracked().len(), 1); // untracked.txt
         assert_eq!(status.conflicted().len(), 1); // conflict.rs
 
-        let lib_status = status.get_status_for_path("src/lib.rs").expect("lib.rs status");
+        let lib_status = status
+            .get_status_for_path("src/lib.rs")
+            .expect("lib.rs status");
         assert_eq!(lib_status.index_status, GitStatusKind::Unmodified);
         assert_eq!(lib_status.worktree_status, GitStatusKind::Modified);
 
-        let rename_status = status.get_status_for_path("src/new.rs").expect("new.rs status");
-        assert_eq!(rename_status.orig_path.as_deref(), Some(Path::new("src/old.rs")));
+        let rename_status = status
+            .get_status_for_path("src/new.rs")
+            .expect("new.rs status");
+        assert_eq!(
+            rename_status.orig_path.as_deref(),
+            Some(Path::new("src/old.rs"))
+        );
     }
 
     #[test]

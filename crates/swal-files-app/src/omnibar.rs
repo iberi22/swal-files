@@ -93,7 +93,11 @@ impl Breadcrumb {
                 std::path::Component::RootDir | std::path::Component::Prefix(_) => {
                     current.push(component);
                     let name = component.as_os_str().to_string_lossy().to_string();
-                    let name = if name.is_empty() { "/".to_string() } else { name };
+                    let name = if name.is_empty() {
+                        "/".to_string()
+                    } else {
+                        name
+                    };
                     breadcrumbs.push(Breadcrumb {
                         name,
                         path: current.clone(),
@@ -283,7 +287,10 @@ impl Omnibar {
     }
 
     /// Executes a shell command asynchronously in a specific working directory.
-    pub async fn execute_shell_in_dir(cmd: &str, working_dir: &Path) -> std::io::Result<ShellOutput> {
+    pub async fn execute_shell_in_dir(
+        cmd: &str,
+        working_dir: &Path,
+    ) -> std::io::Result<ShellOutput> {
         let output = if cfg!(target_os = "windows") {
             tokio::process::Command::new("cmd")
                 .args(["/C", cmd])
@@ -350,21 +357,30 @@ mod tests {
     #[test]
     fn test_intent_parse_shell_command() {
         let intent = OmnibarIntent::parse("> cargo build");
-        assert_eq!(intent, OmnibarIntent::ShellCommand("cargo build".to_string()));
+        assert_eq!(
+            intent,
+            OmnibarIntent::ShellCommand("cargo build".to_string())
+        );
         assert!(intent.is_shell_command());
     }
 
     #[test]
     fn test_intent_parse_agent_query() {
         let intent = OmnibarIntent::parse("@ explain changes");
-        assert_eq!(intent, OmnibarIntent::AgentQuery("explain changes".to_string()));
+        assert_eq!(
+            intent,
+            OmnibarIntent::AgentQuery("explain changes".to_string())
+        );
         assert!(intent.is_agent_query());
     }
 
     #[test]
     fn test_intent_parse_navigation() {
         let intent = OmnibarIntent::parse("/usr/local/bin");
-        assert_eq!(intent, OmnibarIntent::Navigation(PathBuf::from("/usr/local/bin")));
+        assert_eq!(
+            intent,
+            OmnibarIntent::Navigation(PathBuf::from("/usr/local/bin"))
+        );
         assert!(intent.is_navigation());
     }
 
@@ -403,10 +419,16 @@ mod tests {
         assert!(!omnibar.is_focused);
 
         omnibar.set_input("> cargo check");
-        assert_eq!(omnibar.active_intent, OmnibarIntent::ShellCommand("cargo check".to_string()));
+        assert_eq!(
+            omnibar.active_intent,
+            OmnibarIntent::ShellCommand("cargo check".to_string())
+        );
 
         let intent = omnibar.submit();
-        assert_eq!(intent, OmnibarIntent::ShellCommand("cargo check".to_string()));
+        assert_eq!(
+            intent,
+            OmnibarIntent::ShellCommand("cargo check".to_string())
+        );
         assert_eq!(omnibar.history, vec!["> cargo check".to_string()]);
 
         omnibar.set_input("? search_term");

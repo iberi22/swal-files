@@ -86,12 +86,18 @@ fn test_multi_format_decoding() {
     let rust_code = fs::read_to_string(&rust_path).unwrap();
     let opts = HighlightOptions::default();
 
-    let output = fixture.highlighter.highlight_to_html(&rust_code, "sample.rs", &opts).unwrap();
+    let output = fixture
+        .highlighter
+        .highlight_to_html(&rust_code, "sample.rs", &opts)
+        .unwrap();
     assert_eq!(output.language, "Rust");
     assert_eq!(output.line_count, 4);
     assert!(output.content.contains("<span"));
 
-    let lines = fixture.highlighter.highlight_to_lines(&rust_code, "sample.rs", &opts).unwrap();
+    let lines = fixture
+        .highlighter
+        .highlight_to_lines(&rust_code, "sample.rs", &opts)
+        .unwrap();
     assert_eq!(lines.len(), 4);
     assert!(!lines[0].spans.is_empty());
 
@@ -101,7 +107,10 @@ fn test_multi_format_decoding() {
     assert!(md_content.contains("# QuickLook Integration"));
     assert!(md_content.contains("```rust"));
 
-    let md_highlight = fixture.highlighter.highlight_to_html(&md_content, "README.md", &opts).unwrap();
+    let md_highlight = fixture
+        .highlighter
+        .highlight_to_html(&md_content, "README.md", &opts)
+        .unwrap();
     assert_eq!(md_highlight.language, "Markdown");
 
     // 3. Image thumbnail decoding and metadata verification
@@ -144,7 +153,11 @@ async fn test_async_preview_pipeline() {
     let rust_path = fixture.create_rust_file();
     let opts = HighlightOptions::default();
 
-    let output = fixture.highlighter.highlight_file_async(&rust_path, opts).await.unwrap();
+    let output = fixture
+        .highlighter
+        .highlight_file_async(&rust_path, opts)
+        .await
+        .unwrap();
     assert_eq!(output.language, "Rust");
     assert!(!output.content.is_empty());
 
@@ -152,7 +165,9 @@ async fn test_async_preview_pipeline() {
     let svg_meta = extract_metadata_async(&svg_path).await.unwrap();
     assert_eq!(svg_meta.format, ImageFormat::Svg);
 
-    let thumb = generate_thumbnail_async(&svg_path, ThumbnailOptions::default()).await.unwrap();
+    let thumb = generate_thumbnail_async(&svg_path, ThumbnailOptions::default())
+        .await
+        .unwrap();
     assert_eq!(thumb.format, ImageFormat::Svg);
     assert_eq!(thumb.original_dimensions, Some(Dimensions::new(400, 200)));
 }
@@ -165,10 +180,17 @@ fn test_preview_generation_speed() {
 
     let start = Instant::now();
     for _ in 0..10 {
-        let _ = fixture.highlighter.highlight_to_html(&code, "sample.rs", &HighlightOptions::default()).unwrap();
+        let _ = fixture
+            .highlighter
+            .highlight_to_html(&code, "sample.rs", &HighlightOptions::default())
+            .unwrap();
     }
     let elapsed = start.elapsed();
-    assert!(elapsed.as_millis() < 500, "Preview generation too slow: {:?}", elapsed);
+    assert!(
+        elapsed.as_millis() < 500,
+        "Preview generation too slow: {:?}",
+        elapsed
+    );
 }
 
 #[test]

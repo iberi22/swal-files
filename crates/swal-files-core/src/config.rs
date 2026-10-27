@@ -406,7 +406,9 @@ mod tests {
         assert!(io_err.source().is_some());
 
         let dir_err = ConfigError::ConfigDirNotFound;
-        assert!(dir_err.to_string().contains("Could not determine user configuration directory"));
+        assert!(dir_err
+            .to_string()
+            .contains("Could not determine user configuration directory"));
         assert!(dir_err.source().is_none());
     }
 }

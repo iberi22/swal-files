@@ -130,7 +130,9 @@ impl GitStageOperator {
 
                 if !output.status.success() {
                     let err_msg = String::from_utf8_lossy(&output.stderr);
-                    return Err(GitCommitError::GitExecutionFailed(err_msg.trim().to_string()));
+                    return Err(GitCommitError::GitExecutionFailed(
+                        err_msg.trim().to_string(),
+                    ));
                 }
             }
             StageOperation::UnstagePath(path) => {
@@ -150,7 +152,9 @@ impl GitStageOperator {
 
                     if !output_reset.status.success() {
                         let err_msg = String::from_utf8_lossy(&output.stderr);
-                        return Err(GitCommitError::GitExecutionFailed(err_msg.trim().to_string()));
+                        return Err(GitCommitError::GitExecutionFailed(
+                            err_msg.trim().to_string(),
+                        ));
                     }
                 }
             }
@@ -163,7 +167,9 @@ impl GitStageOperator {
 
                 if !output.status.success() {
                     let err_msg = String::from_utf8_lossy(&output.stderr);
-                    return Err(GitCommitError::GitExecutionFailed(err_msg.trim().to_string()));
+                    return Err(GitCommitError::GitExecutionFailed(
+                        err_msg.trim().to_string(),
+                    ));
                 }
             }
             StageOperation::UnstageAll => {
@@ -175,7 +181,9 @@ impl GitStageOperator {
 
                 if !output.status.success() {
                     let err_msg = String::from_utf8_lossy(&output.stderr);
-                    return Err(GitCommitError::GitExecutionFailed(err_msg.trim().to_string()));
+                    return Err(GitCommitError::GitExecutionFailed(
+                        err_msg.trim().to_string(),
+                    ));
                 }
             }
             StageOperation::DiscardChanges(path) => {
@@ -188,7 +196,9 @@ impl GitStageOperator {
 
                 if !output.status.success() {
                     let err_msg = String::from_utf8_lossy(&output.stderr);
-                    return Err(GitCommitError::GitExecutionFailed(err_msg.trim().to_string()));
+                    return Err(GitCommitError::GitExecutionFailed(
+                        err_msg.trim().to_string(),
+                    ));
                 }
 
                 // If path is untracked directory/file, clean it
@@ -200,7 +210,9 @@ impl GitStageOperator {
 
                 if !clean_output.status.success() {
                     let err_msg = String::from_utf8_lossy(&clean_output.stderr);
-                    return Err(GitCommitError::GitExecutionFailed(err_msg.trim().to_string()));
+                    return Err(GitCommitError::GitExecutionFailed(
+                        err_msg.trim().to_string(),
+                    ));
                 }
             }
         }
@@ -251,7 +263,10 @@ impl CommitBuilder {
     }
 
     /// Executes the commit asynchronously against the given repository path.
-    pub async fn commit(&self, repo_path: impl AsRef<Path>) -> Result<CommitResult, GitCommitError> {
+    pub async fn commit(
+        &self,
+        repo_path: impl AsRef<Path>,
+    ) -> Result<CommitResult, GitCommitError> {
         let repo_path = repo_path.as_ref();
         if !repo_path.exists() {
             return Err(GitCommitError::RepositoryNotFound(repo_path.to_path_buf()));
@@ -300,7 +315,9 @@ impl CommitBuilder {
 
         if !output.status.success() {
             let err_msg = String::from_utf8_lossy(&output.stderr);
-            return Err(GitCommitError::GitExecutionFailed(err_msg.trim().to_string()));
+            return Err(GitCommitError::GitExecutionFailed(
+                err_msg.trim().to_string(),
+            ));
         }
 
         // Get created/amended commit hash
@@ -311,7 +328,9 @@ impl CommitBuilder {
             .await?;
 
         let commit_hash = if hash_output.status.success() {
-            String::from_utf8_lossy(&hash_output.stdout).trim().to_string()
+            String::from_utf8_lossy(&hash_output.stdout)
+                .trim()
+                .to_string()
         } else {
             String::new()
         };
@@ -324,7 +343,9 @@ impl CommitBuilder {
             .await?;
 
         let branch = if branch_output.status.success() {
-            let b = String::from_utf8_lossy(&branch_output.stdout).trim().to_string();
+            let b = String::from_utf8_lossy(&branch_output.stdout)
+                .trim()
+                .to_string();
             if b.is_empty() || b == "HEAD" {
                 None
             } else {
@@ -338,11 +359,7 @@ impl CommitBuilder {
         let stdout = String::from_utf8_lossy(&output.stdout);
         let (files_changed, insertions, deletions) = parse_commit_stats(&stdout);
 
-        let summary = message
-            .lines()
-            .next()
-            .unwrap_or_default()
-            .to_string();
+        let summary = message.lines().next().unwrap_or_default().to_string();
 
         Ok(CommitResult {
             commit_hash,
@@ -448,7 +465,10 @@ mod tests {
         assert!(status_str.contains("?? file2.txt"));
 
         // Test StageAll
-        operator.execute(path, StageOperation::StageAll).await.unwrap();
+        operator
+            .execute(path, StageOperation::StageAll)
+            .await
+            .unwrap();
         let status = Command::new("git")
             .current_dir(path)
             .args(["status", "--porcelain"])
@@ -461,7 +481,10 @@ mod tests {
 
         // Test UnstagePath
         operator
-            .execute(path, StageOperation::UnstagePath(PathBuf::from("file2.txt")))
+            .execute(
+                path,
+                StageOperation::UnstagePath(PathBuf::from("file2.txt")),
+            )
             .await
             .unwrap();
         let status = Command::new("git")
@@ -475,7 +498,10 @@ mod tests {
         assert!(status_str.contains("?? file2.txt"));
 
         // Test UnstageAll
-        operator.execute(path, StageOperation::UnstageAll).await.unwrap();
+        operator
+            .execute(path, StageOperation::UnstageAll)
+            .await
+            .unwrap();
         let status = Command::new("git")
             .current_dir(path)
             .args(["status", "--porcelain"])
@@ -496,7 +522,10 @@ mod tests {
         let file1 = path.join("file1.txt");
         fs::write(&file1, "initial").await.unwrap();
 
-        operator.execute(path, StageOperation::StageAll).await.unwrap();
+        operator
+            .execute(path, StageOperation::StageAll)
+            .await
+            .unwrap();
         let _ = CommitBuilder::new()
             .message("initial commit")
             .commit(path)
@@ -508,7 +537,10 @@ mod tests {
 
         // Discard changes
         operator
-            .execute(path, StageOperation::DiscardChanges(PathBuf::from("file1.txt")))
+            .execute(
+                path,
+                StageOperation::DiscardChanges(PathBuf::from("file1.txt")),
+            )
             .await
             .unwrap();
 
@@ -525,7 +557,10 @@ mod tests {
         let file = path.join("test.txt");
         fs::write(&file, "hello world").await.unwrap();
 
-        operator.execute(path, StageOperation::StageAll).await.unwrap();
+        operator
+            .execute(path, StageOperation::StageAll)
+            .await
+            .unwrap();
 
         let result = CommitBuilder::new()
             .message("feat: add test file")
@@ -597,7 +632,11 @@ mod tests {
         let path = dir.path();
 
         // Empty message error
-        let err = CommitBuilder::new().message("   ").commit(path).await.unwrap_err();
+        let err = CommitBuilder::new()
+            .message("   ")
+            .commit(path)
+            .await
+            .unwrap_err();
 
         matches!(err, GitCommitError::EmptyCommitMessage);
 

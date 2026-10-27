@@ -4,7 +4,9 @@ use std::path::Path;
 use std::sync::Arc;
 use syntect::easy::HighlightLines;
 use syntect::highlighting::{FontStyle as SyntectFontStyle, Theme, ThemeSet};
-use syntect::html::{highlighted_html_for_string, styled_line_to_highlighted_html, IncludeBackground};
+use syntect::html::{
+    highlighted_html_for_string, styled_line_to_highlighted_html, IncludeBackground,
+};
 use syntect::parsing::{SyntaxReference, SyntaxSet};
 use syntect::util::as_24_bit_terminal_escaped;
 
@@ -163,11 +165,7 @@ impl SyntaxHighlighter {
 
     /// Returns a list of supported syntax names.
     pub fn list_syntaxes(&self) -> Vec<String> {
-        self.ss
-            .syntaxes()
-            .iter()
-            .map(|s| s.name.clone())
-            .collect()
+        self.ss.syntaxes().iter().map(|s| s.name.clone()).collect()
     }
 
     /// Finds a syntax reference by extension, path/filename, or content header/first line.
@@ -461,14 +459,8 @@ mod tests {
         let highlighter = SyntaxHighlighter::new();
 
         assert_eq!(highlighter.detect_language("main.rs", None), "Rust");
-        assert_eq!(
-            highlighter.detect_language("script.py", None),
-            "Python"
-        );
-        assert_eq!(
-            highlighter.detect_language("index.js", None),
-            "JavaScript"
-        );
+        assert_eq!(highlighter.detect_language("script.py", None), "Python");
+        assert_eq!(highlighter.detect_language("index.js", None), "JavaScript");
         assert_eq!(
             highlighter.detect_language("unknown.xyz_123", Some("#!/bin/bash")),
             "Bourne Again Shell (bash)"

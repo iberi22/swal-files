@@ -57,7 +57,11 @@ impl VfsGitIntegrationFixture {
     }
 
     /// Writes content to a relative file path inside the fixture repo.
-    pub async fn create_file(&self, rel_path: impl AsRef<Path>, content: &str) -> std::io::Result<PathBuf> {
+    pub async fn create_file(
+        &self,
+        rel_path: impl AsRef<Path>,
+        content: &str,
+    ) -> std::io::Result<PathBuf> {
         let full_path = self.path().join(rel_path);
         if let Some(parent) = full_path.parent() {
             fs::create_dir_all(parent).await?;
@@ -67,7 +71,10 @@ impl VfsGitIntegrationFixture {
     }
 
     /// Stage a file path in git index.
-    pub async fn git_add(&self, rel_path: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Error>> {
+    pub async fn git_add(
+        &self,
+        rel_path: impl AsRef<Path>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let status = Command::new("git")
             .arg("add")
             .arg(rel_path.as_ref())
@@ -151,15 +158,21 @@ async fn test_scanner_with_git_status() -> Result<(), Box<dyn std::error::Error>
     let fixture = VfsGitIntegrationFixture::new().await?;
 
     // Create and commit a clean file
-    fixture.create_file("clean_file.txt", "Initial content").await?;
+    fixture
+        .create_file("clean_file.txt", "Initial content")
+        .await?;
     fixture.git_add("clean_file.txt").await?;
     fixture.git_commit("Initial commit").await?;
 
     // Create untracked file
-    fixture.create_file("untracked_file.txt", "Untracked data").await?;
+    fixture
+        .create_file("untracked_file.txt", "Untracked data")
+        .await?;
 
     // Create and stage a file
-    fixture.create_file("staged_file.txt", "Staged data").await?;
+    fixture
+        .create_file("staged_file.txt", "Staged data")
+        .await?;
     fixture.git_add("staged_file.txt").await?;
 
     let (entries, git_status) = fixture.scan_and_get_git_status().await?;
@@ -169,7 +182,10 @@ async fn test_scanner_with_git_status() -> Result<(), Box<dyn std::error::Error>
 
     let untracked_status = git_status.get_status_for_path("untracked_file.txt");
     assert!(untracked_status.is_some());
-    assert_eq!(untracked_status.unwrap().worktree_status, GitStatusKind::Untracked);
+    assert_eq!(
+        untracked_status.unwrap().worktree_status,
+        GitStatusKind::Untracked
+    );
 
     let staged_status = git_status.get_status_for_path("staged_file.txt");
     assert!(staged_status.is_some());
@@ -186,14 +202,22 @@ async fn test_scanner_recursive_nested_git_dirty_clean() -> Result<(), Box<dyn s
     // nested/dir/clean.txt (committed)
     // nested/dir/modified.txt (committed then modified -> dirty)
     // nested/dir/untracked.txt (untracked -> dirty)
-    fixture.create_file("nested/dir/clean.txt", "Clean content").await?;
-    fixture.create_file("nested/dir/modified.txt", "Original content").await?;
+    fixture
+        .create_file("nested/dir/clean.txt", "Clean content")
+        .await?;
+    fixture
+        .create_file("nested/dir/modified.txt", "Original content")
+        .await?;
     fixture.git_add(".").await?;
     fixture.git_commit("Commit nested baseline").await?;
 
     // Modify file to make dirty
-    fixture.create_file("nested/dir/modified.txt", "Modified content!").await?;
-    fixture.create_file("nested/dir/untracked.txt", "New untracked").await?;
+    fixture
+        .create_file("nested/dir/modified.txt", "Modified content!")
+        .await?;
+    fixture
+        .create_file("nested/dir/untracked.txt", "New untracked")
+        .await?;
 
     let (entries, git_status) = fixture.scan_and_get_git_status().await?;
 
@@ -208,7 +232,10 @@ async fn test_scanner_recursive_nested_git_dirty_clean() -> Result<(), Box<dyn s
     assert_eq!(mod_status.unwrap().worktree_status, GitStatusKind::Modified);
 
     let clean_status = git_status.get_status_for_path("nested/dir/clean.txt");
-    assert!(clean_status.is_none() || clean_status.unwrap().worktree_status == GitStatusKind::Unmodified);
+    assert!(
+        clean_status.is_none()
+            || clean_status.unwrap().worktree_status == GitStatusKind::Unmodified
+    );
 
     assert_eq!(git_status.untracked().len(), 1);
     assert_eq!(git_status.unstaged().len(), 1);

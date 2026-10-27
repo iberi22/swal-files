@@ -12,15 +12,45 @@ pub struct KeyModifier {
 }
 
 impl KeyModifier {
-    pub const NONE: Self = Self { ctrl: false, alt: false, shift: false, meta: false };
-    pub const CTRL: Self = Self { ctrl: true, alt: false, shift: false, meta: false };
-    pub const ALT: Self = Self { ctrl: false, alt: true, shift: false, meta: false };
-    pub const SHIFT: Self = Self { ctrl: false, alt: false, shift: true, meta: false };
-    pub const META: Self = Self { ctrl: false, alt: false, shift: false, meta: true };
+    pub const NONE: Self = Self {
+        ctrl: false,
+        alt: false,
+        shift: false,
+        meta: false,
+    };
+    pub const CTRL: Self = Self {
+        ctrl: true,
+        alt: false,
+        shift: false,
+        meta: false,
+    };
+    pub const ALT: Self = Self {
+        ctrl: false,
+        alt: true,
+        shift: false,
+        meta: false,
+    };
+    pub const SHIFT: Self = Self {
+        ctrl: false,
+        alt: false,
+        shift: true,
+        meta: false,
+    };
+    pub const META: Self = Self {
+        ctrl: false,
+        alt: false,
+        shift: false,
+        meta: true,
+    };
 
     /// Creates a new [`KeyModifier`] set.
     pub fn new(ctrl: bool, alt: bool, shift: bool, meta: bool) -> Self {
-        Self { ctrl, alt, shift, meta }
+        Self {
+            ctrl,
+            alt,
+            shift,
+            meta,
+        }
     }
 }
 
@@ -71,7 +101,9 @@ pub struct KeybindManager {
 impl KeybindManager {
     /// Creates a new [`KeybindManager`] initialized with default keybindings.
     pub fn new() -> Self {
-        let mut manager = Self { bindings: Vec::new() };
+        let mut manager = Self {
+            bindings: Vec::new(),
+        };
         manager.register_defaults();
         manager
     }
@@ -92,8 +124,9 @@ impl KeybindManager {
 
     /// Registers or overrides a [`ShortcutBinding`].
     pub fn register(&mut self, binding: ShortcutBinding) {
-        self.bindings
-            .retain(|b| !(b.key.eq_ignore_ascii_case(&binding.key) && b.modifier == binding.modifier));
+        self.bindings.retain(|b| {
+            !(b.key.eq_ignore_ascii_case(&binding.key) && b.modifier == binding.modifier)
+        });
         self.bindings.push(binding);
     }
 
@@ -138,22 +171,52 @@ mod tests {
     fn test_default_keybindings_dispatch() {
         let manager = KeybindManager::new();
 
-        assert_eq!(manager.dispatch("t", &KeyModifier::CTRL), Some(KeyAction::NewTab));
-        assert_eq!(manager.dispatch("w", &KeyModifier::CTRL), Some(KeyAction::CloseTab));
-        assert_eq!(manager.dispatch("f6", &KeyModifier::NONE), Some(KeyAction::SwitchPane));
-        assert_eq!(manager.dispatch("space", &KeyModifier::NONE), Some(KeyAction::ToggleSelection));
-        assert_eq!(manager.dispatch("l", &KeyModifier::CTRL), Some(KeyAction::FocusOmnibar));
-        assert_eq!(manager.dispatch("backspace", &KeyModifier::NONE), Some(KeyAction::NavigateParent));
-        assert_eq!(manager.dispatch("enter", &KeyModifier::NONE), Some(KeyAction::OpenItem));
-        assert_eq!(manager.dispatch("esc", &KeyModifier::NONE), Some(KeyAction::Cancel));
+        assert_eq!(
+            manager.dispatch("t", &KeyModifier::CTRL),
+            Some(KeyAction::NewTab)
+        );
+        assert_eq!(
+            manager.dispatch("w", &KeyModifier::CTRL),
+            Some(KeyAction::CloseTab)
+        );
+        assert_eq!(
+            manager.dispatch("f6", &KeyModifier::NONE),
+            Some(KeyAction::SwitchPane)
+        );
+        assert_eq!(
+            manager.dispatch("space", &KeyModifier::NONE),
+            Some(KeyAction::ToggleSelection)
+        );
+        assert_eq!(
+            manager.dispatch("l", &KeyModifier::CTRL),
+            Some(KeyAction::FocusOmnibar)
+        );
+        assert_eq!(
+            manager.dispatch("backspace", &KeyModifier::NONE),
+            Some(KeyAction::NavigateParent)
+        );
+        assert_eq!(
+            manager.dispatch("enter", &KeyModifier::NONE),
+            Some(KeyAction::OpenItem)
+        );
+        assert_eq!(
+            manager.dispatch("esc", &KeyModifier::NONE),
+            Some(KeyAction::Cancel)
+        );
     }
 
     #[test]
     fn test_case_insensitivity_and_unmatched() {
         let manager = KeybindManager::new();
 
-        assert_eq!(manager.dispatch("T", &KeyModifier::CTRL), Some(KeyAction::NewTab));
-        assert_eq!(manager.dispatch("W", &KeyModifier::CTRL), Some(KeyAction::CloseTab));
+        assert_eq!(
+            manager.dispatch("T", &KeyModifier::CTRL),
+            Some(KeyAction::NewTab)
+        );
+        assert_eq!(
+            manager.dispatch("W", &KeyModifier::CTRL),
+            Some(KeyAction::CloseTab)
+        );
         assert_eq!(manager.dispatch("x", &KeyModifier::CTRL), None);
         assert_eq!(manager.dispatch("t", &KeyModifier::NONE), None);
     }
@@ -161,7 +224,11 @@ mod tests {
     #[test]
     fn test_custom_binding_register_and_unregister() {
         let mut manager = KeybindManager::new();
-        let custom = ShortcutBinding::new("g", KeyModifier::CTRL, KeyAction::Custom("GitStatus".to_string()));
+        let custom = ShortcutBinding::new(
+            "g",
+            KeyModifier::CTRL,
+            KeyAction::Custom("GitStatus".to_string()),
+        );
 
         manager.register(custom);
         assert_eq!(
@@ -177,7 +244,11 @@ mod tests {
     #[test]
     fn test_override_existing_binding() {
         let mut manager = KeybindManager::new();
-        let override_binding = ShortcutBinding::new("t", KeyModifier::CTRL, KeyAction::Custom("CustomNewTab".to_string()));
+        let override_binding = ShortcutBinding::new(
+            "t",
+            KeyModifier::CTRL,
+            KeyAction::Custom("CustomNewTab".to_string()),
+        );
 
         manager.register(override_binding);
         assert_eq!(

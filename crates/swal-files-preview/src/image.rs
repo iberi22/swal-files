@@ -18,7 +18,8 @@ pub enum ImageFormat {
 impl ImageFormat {
     /// Detects format from magic bytes at the start of a buffer.
     pub fn from_bytes(bytes: &[u8]) -> Self {
-        if bytes.len() >= 8 && bytes.starts_with(&[0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]) {
+        if bytes.len() >= 8 && bytes.starts_with(&[0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
+        {
             return ImageFormat::Png;
         }
         if bytes.len() >= 3 && bytes.starts_with(&[0xFF, 0xD8, 0xFF]) {
@@ -41,7 +42,10 @@ impl ImageFormat {
         let sample_len = bytes.len().min(1024);
         if let Ok(text) = std::str::from_utf8(&bytes[..sample_len]) {
             let trimmed = text.trim_start();
-            if trimmed.starts_with("<?xml") || trimmed.starts_with("<svg") || trimmed.contains("<svg") {
+            if trimmed.starts_with("<?xml")
+                || trimmed.starts_with("<svg")
+                || trimmed.contains("<svg")
+            {
                 return ImageFormat::Svg;
             }
         }
@@ -307,8 +311,10 @@ pub fn extract_dimensions(bytes: &[u8]) -> Option<Dimensions> {
         }
         ImageFormat::Bmp => {
             if bytes.len() >= 26 {
-                let w = i32::from_le_bytes([bytes[18], bytes[19], bytes[20], bytes[21]]).unsigned_abs();
-                let h = i32::from_le_bytes([bytes[22], bytes[23], bytes[24], bytes[25]]).unsigned_abs();
+                let w =
+                    i32::from_le_bytes([bytes[18], bytes[19], bytes[20], bytes[21]]).unsigned_abs();
+                let h =
+                    i32::from_le_bytes([bytes[22], bytes[23], bytes[24], bytes[25]]).unsigned_abs();
                 Some(Dimensions::new(w, h))
             } else {
                 None
@@ -413,7 +419,9 @@ fn extract_webp_dimensions(bytes: &[u8]) -> Option<Dimensions> {
 pub fn extract_metadata(bytes: &[u8], file_size: u64) -> Result<ImageMetadata, ImageError> {
     let format = ImageFormat::from_bytes(bytes);
     if format == ImageFormat::Unknown && !bytes.is_empty() {
-        return Err(ImageError::UnsupportedFormat("Unknown image binary format".to_string()));
+        return Err(ImageError::UnsupportedFormat(
+            "Unknown image binary format".to_string(),
+        ));
     }
 
     let dimensions = extract_dimensions(bytes);
@@ -450,7 +458,11 @@ pub fn extract_metadata(bytes: &[u8], file_size: u64) -> Result<ImageMetadata, I
 }
 
 /// Generates ASCII art preview string for raster or vector content.
-pub fn generate_ascii_art(bytes: &[u8], target_width: u32, target_height: u32) -> Result<String, ImageError> {
+pub fn generate_ascii_art(
+    bytes: &[u8],
+    target_width: u32,
+    target_height: u32,
+) -> Result<String, ImageError> {
     let target_width = target_width.clamp(10, 120) as usize;
     let target_height = target_height.clamp(5, 60) as usize;
 
@@ -476,7 +488,9 @@ pub fn generate_ascii_art(bytes: &[u8], target_width: u32, target_height: u32) -
     // Sample pixels / byte grid deterministically for binary formats
     let total_bytes = bytes.len();
     if total_bytes == 0 {
-        return Err(ImageError::ProcessingFailed("Empty buffer provided".to_string()));
+        return Err(ImageError::ProcessingFailed(
+            "Empty buffer provided".to_string(),
+        ));
     }
 
     for y in 0..target_height {
@@ -493,14 +507,19 @@ pub fn generate_ascii_art(bytes: &[u8], target_width: u32, target_height: u32) -
 }
 
 /// Generates an SVG-wrapped thumbnail or data URL representation for SVG input.
-pub fn generate_svg_thumbnail(svg_content: &str, options: &ThumbnailOptions) -> Result<Thumbnail, ImageError> {
+pub fn generate_svg_thumbnail(
+    svg_content: &str,
+    options: &ThumbnailOptions,
+) -> Result<Thumbnail, ImageError> {
     let info = parse_svg_info(svg_content);
     let orig_dims = info.dimensions;
 
     let target_dims = match orig_dims {
         Some(dims) => match options.fit_mode {
             FitMode::Fit => dims.fit_within(options.max_width, options.max_height),
-            FitMode::Fill | FitMode::Stretch => Dimensions::new(options.max_width, options.max_height),
+            FitMode::Fill | FitMode::Stretch => {
+                Dimensions::new(options.max_width, options.max_height)
+            }
         },
         None => Dimensions::new(options.max_width, options.max_height),
     };
@@ -511,7 +530,10 @@ pub fn generate_svg_thumbnail(svg_content: &str, options: &ThumbnailOptions) -> 
                 Some((x, y, w, h)) => format!("viewBox=\"{} {} {} {}\"", x, y, w, h),
                 None => match orig_dims {
                     Some(dims) => format!("viewBox=\"0 0 {} {}\"", dims.width, dims.height),
-                    None => format!("viewBox=\"0 0 {} {}\"", target_dims.width, target_dims.height),
+                    None => format!(
+                        "viewBox=\"0 0 {} {}\"",
+                        target_dims.width, target_dims.height
+                    ),
                 },
             };
 
@@ -534,11 +556,18 @@ pub fn generate_svg_thumbnail(svg_content: &str, options: &ThumbnailOptions) -> 
             (encoded, None)
         }
         ThumbnailOutputFormat::AsciiArt => {
-            let ascii = generate_ascii_art(svg_content.as_bytes(), target_dims.width / 4, target_dims.height / 8)?;
+            let ascii = generate_ascii_art(
+                svg_content.as_bytes(),
+                target_dims.width / 4,
+                target_dims.height / 8,
+            )?;
             (ascii.clone(), Some(ascii))
         }
         ThumbnailOutputFormat::RawRgba => {
-            let rgba_placeholder = format!("RGBA_THUMBNAIL_{}x{}", target_dims.width, target_dims.height);
+            let rgba_placeholder = format!(
+                "RGBA_THUMBNAIL_{}x{}",
+                target_dims.width, target_dims.height
+            );
             (rgba_placeholder, None)
         }
     };
@@ -553,9 +582,14 @@ pub fn generate_svg_thumbnail(svg_content: &str, options: &ThumbnailOptions) -> 
 }
 
 /// Generates a thumbnail for any supported image binary or SVG payload.
-pub fn generate_thumbnail(bytes: &[u8], options: &ThumbnailOptions) -> Result<Thumbnail, ImageError> {
+pub fn generate_thumbnail(
+    bytes: &[u8],
+    options: &ThumbnailOptions,
+) -> Result<Thumbnail, ImageError> {
     if bytes.is_empty() {
-        return Err(ImageError::ProcessingFailed("Empty image buffer".to_string()));
+        return Err(ImageError::ProcessingFailed(
+            "Empty image buffer".to_string(),
+        ));
     }
 
     let format = ImageFormat::from_bytes(bytes);
@@ -569,13 +603,19 @@ pub fn generate_thumbnail(bytes: &[u8], options: &ThumbnailOptions) -> Result<Th
     let target_dims = match orig_dims {
         Some(dims) => match options.fit_mode {
             FitMode::Fit => dims.fit_within(options.max_width, options.max_height),
-            FitMode::Fill | FitMode::Stretch => Dimensions::new(options.max_width, options.max_height),
+            FitMode::Fill | FitMode::Stretch => {
+                Dimensions::new(options.max_width, options.max_height)
+            }
         },
         None => Dimensions::new(options.max_width, options.max_height),
     };
 
     let ascii = if options.output_format == ThumbnailOutputFormat::AsciiArt {
-        Some(generate_ascii_art(bytes, target_dims.width / 4, target_dims.height / 8)?)
+        Some(generate_ascii_art(
+            bytes,
+            target_dims.width / 4,
+            target_dims.height / 8,
+        )?)
     } else {
         None
     };
@@ -605,7 +645,10 @@ pub fn generate_thumbnail(bytes: &[u8], options: &ThumbnailOptions) -> Result<Th
         }
         ThumbnailOutputFormat::AsciiArt => ascii.clone().unwrap_or_default(),
         ThumbnailOutputFormat::RawRgba => {
-            format!("RAW_RGBA_{}x{}_{:?}", target_dims.width, target_dims.height, format)
+            format!(
+                "RAW_RGBA_{}x{}_{:?}",
+                target_dims.width, target_dims.height, format
+            )
         }
     };
 
@@ -673,14 +716,32 @@ mod tests {
 
     #[test]
     fn test_format_detection_from_bytes() {
-        assert_eq!(ImageFormat::from_bytes(&[0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]), ImageFormat::Png);
-        assert_eq!(ImageFormat::from_bytes(&[0xFF, 0xD8, 0xFF, 0xE0]), ImageFormat::Jpeg);
+        assert_eq!(
+            ImageFormat::from_bytes(&[0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]),
+            ImageFormat::Png
+        );
+        assert_eq!(
+            ImageFormat::from_bytes(&[0xFF, 0xD8, 0xFF, 0xE0]),
+            ImageFormat::Jpeg
+        );
         assert_eq!(ImageFormat::from_bytes(b"GIF89a..."), ImageFormat::Gif);
         assert_eq!(ImageFormat::from_bytes(b"BM...."), ImageFormat::Bmp);
-        assert_eq!(ImageFormat::from_bytes(b"RIFF\x00\x00\x00\x00WEBP"), ImageFormat::WebP);
-        assert_eq!(ImageFormat::from_bytes(b"<svg xmlns='http://www.w3.org/2000/svg'></svg>"), ImageFormat::Svg);
-        assert_eq!(ImageFormat::from_bytes(&[0x00, 0x00, 0x01, 0x00]), ImageFormat::Ico);
-        assert_eq!(ImageFormat::from_bytes(b"unknown data"), ImageFormat::Unknown);
+        assert_eq!(
+            ImageFormat::from_bytes(b"RIFF\x00\x00\x00\x00WEBP"),
+            ImageFormat::WebP
+        );
+        assert_eq!(
+            ImageFormat::from_bytes(b"<svg xmlns='http://www.w3.org/2000/svg'></svg>"),
+            ImageFormat::Svg
+        );
+        assert_eq!(
+            ImageFormat::from_bytes(&[0x00, 0x00, 0x01, 0x00]),
+            ImageFormat::Ico
+        );
+        assert_eq!(
+            ImageFormat::from_bytes(b"unknown data"),
+            ImageFormat::Unknown
+        );
     }
 
     #[test]
@@ -817,7 +878,9 @@ mod tests {
             assert_eq!(meta.format, ImageFormat::Svg);
             assert_eq!(meta.dimensions, Some(Dimensions::new(400, 200)));
 
-            let thumb = generate_thumbnail_async(&file_path, ThumbnailOptions::default()).await.unwrap();
+            let thumb = generate_thumbnail_async(&file_path, ThumbnailOptions::default())
+                .await
+                .unwrap();
             assert_eq!(thumb.original_dimensions, Some(Dimensions::new(400, 200)));
             assert_eq!(thumb.format, ImageFormat::Svg);
         });

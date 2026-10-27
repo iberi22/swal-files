@@ -36,7 +36,10 @@ impl Default for ScanBenchmark {
 impl ScanBenchmark {
     /// Constructs a new [`ScanBenchmark`] initialized with the given target file count.
     pub fn new(file_count: usize) -> Self {
-        Self { file_count, ..Default::default() }
+        Self {
+            file_count,
+            ..Default::default()
+        }
     }
 
     /// Configures the directory recursion depth for synthetic testing.
@@ -71,11 +74,23 @@ impl ScanBenchmark {
         let total_bytes: u64 = entries.iter().map(|e| e.size).sum();
 
         let elapsed_secs = elapsed.as_secs_f64();
-        let files_per_second = if elapsed_secs > 0.0 { entries.len() as f64 / elapsed_secs } else { 0.0 };
-        let mb_per_second = if elapsed_secs > 0.0 { (total_bytes as f64 / (1024.0 * 1024.0)) / elapsed_secs } else { 0.0 };
+        let files_per_second = if elapsed_secs > 0.0 {
+            entries.len() as f64 / elapsed_secs
+        } else {
+            0.0
+        };
+        let mb_per_second = if elapsed_secs > 0.0 {
+            (total_bytes as f64 / (1024.0 * 1024.0)) / elapsed_secs
+        } else {
+            0.0
+        };
 
         let batch_count = (entries.len() + self.batch_size - 1) / self.batch_size.max(1);
-        let avg_batch_latency_ms = if batch_count > 0 { (elapsed_secs * 1000.0) / batch_count as f64 } else { 0.0 };
+        let avg_batch_latency_ms = if batch_count > 0 {
+            (elapsed_secs * 1000.0) / batch_count as f64
+        } else {
+            0.0
+        };
         let frame_budget_exceeded = avg_batch_latency_ms > self.target_frame_budget_ms;
 
         Ok(BenchmarkResult {

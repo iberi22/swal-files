@@ -1,9 +1,9 @@
 #![deny(unsafe_code)]
 
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt;
 use std::time::Duration;
-use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc;
 
 /// Configuration for the Xavier Cognitive Memory Client.
@@ -229,8 +229,14 @@ impl XavierClient {
     }
 
     /// Queries the Xavier Cognitive Memory REST service.
-    pub async fn query(&self, query: &MemoryQuery) -> Result<MemorySearchResult, XavierClientError> {
-        let url = format!("{}/api/v1/memories/query", self.config.api_base_url.trim_end_matches('/'));
+    pub async fn query(
+        &self,
+        query: &MemoryQuery,
+    ) -> Result<MemorySearchResult, XavierClientError> {
+        let url = format!(
+            "{}/api/v1/memories/query",
+            self.config.api_base_url.trim_end_matches('/')
+        );
         let mut req = self.http_client.post(&url).json(query);
 
         if let Some(token) = &self.config.auth_token {
@@ -253,7 +259,10 @@ impl XavierClient {
 
     /// Stores a new or updated memory entry in Xavier Cognitive Memory.
     pub async fn store(&self, entry: &MemoryEntry) -> Result<MemoryEntry, XavierClientError> {
-        let url = format!("{}/api/v1/memories", self.config.api_base_url.trim_end_matches('/'));
+        let url = format!(
+            "{}/api/v1/memories",
+            self.config.api_base_url.trim_end_matches('/')
+        );
         let mut req = self.http_client.post(&url).json(entry);
 
         if let Some(token) = &self.config.auth_token {
@@ -341,7 +350,9 @@ impl XavierClient {
     }
 
     /// Extracts a `MemorySyncEvent` from a `MemorySyncMessage` if applicable.
-    pub fn extract_sync_event(msg: &MemorySyncMessage) -> Result<MemorySyncEvent, XavierClientError> {
+    pub fn extract_sync_event(
+        msg: &MemorySyncMessage,
+    ) -> Result<MemorySyncEvent, XavierClientError> {
         if msg.action != SyncAction::Event {
             return Err(XavierClientError::WebSocketError(
                 "Message action is not SyncAction::Event".to_string(),
@@ -396,7 +407,10 @@ mod tests {
         assert_eq!(entry.id, "m1");
         assert_eq!(entry.content, "Test Memory Content");
         assert_eq!(entry.tags, vec!["cognitive", "swal"]);
-        assert_eq!(entry.metadata.get("source").map(|s| s.as_str()), Some("user_prompt"));
+        assert_eq!(
+            entry.metadata.get("source").map(|s| s.as_str()),
+            Some("user_prompt")
+        );
     }
 
     #[test]

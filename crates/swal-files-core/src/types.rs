@@ -76,9 +76,9 @@ impl FileKind {
                 FileKind::Document
             }
             // Source Code / Config
-            "rs" | "js" | "ts" | "jsx" | "tsx" | "py" | "c" | "cpp" | "h" | "hpp" | "go" | "java"
-            | "json" | "toml" | "yaml" | "yml" | "html" | "css" | "sh" | "bash" | "zsh" | "sql"
-            | "xml" => FileKind::Code,
+            "rs" | "js" | "ts" | "jsx" | "tsx" | "py" | "c" | "cpp" | "h" | "hpp" | "go"
+            | "java" | "json" | "toml" | "yaml" | "yml" | "html" | "css" | "sh" | "bash"
+            | "zsh" | "sql" | "xml" => FileKind::Code,
             // Archives
             "zip" | "tar" | "gz" | "bz2" | "xz" | "7z" | "rar" | "zst" => FileKind::Archive,
             _ => FileKind::Unknown,
@@ -428,16 +428,40 @@ mod tests {
         let path_unknown = Path::new("data.bin");
 
         let file_type = FileType::File;
-        assert_eq!(FileKind::from_path_and_type(path_img, &file_type), FileKind::Image);
-        assert_eq!(FileKind::from_path_and_type(path_code, &file_type), FileKind::Code);
-        assert_eq!(FileKind::from_path_and_type(path_doc, &file_type), FileKind::Document);
-        assert_eq!(FileKind::from_path_and_type(path_archive, &file_type), FileKind::Archive);
-        assert_eq!(FileKind::from_path_and_type(path_audio, &file_type), FileKind::Audio);
-        assert_eq!(FileKind::from_path_and_type(path_video, &file_type), FileKind::Video);
-        assert_eq!(FileKind::from_path_and_type(path_unknown, &file_type), FileKind::Unknown);
+        assert_eq!(
+            FileKind::from_path_and_type(path_img, &file_type),
+            FileKind::Image
+        );
+        assert_eq!(
+            FileKind::from_path_and_type(path_code, &file_type),
+            FileKind::Code
+        );
+        assert_eq!(
+            FileKind::from_path_and_type(path_doc, &file_type),
+            FileKind::Document
+        );
+        assert_eq!(
+            FileKind::from_path_and_type(path_archive, &file_type),
+            FileKind::Archive
+        );
+        assert_eq!(
+            FileKind::from_path_and_type(path_audio, &file_type),
+            FileKind::Audio
+        );
+        assert_eq!(
+            FileKind::from_path_and_type(path_video, &file_type),
+            FileKind::Video
+        );
+        assert_eq!(
+            FileKind::from_path_and_type(path_unknown, &file_type),
+            FileKind::Unknown
+        );
 
         let dir_type = FileType::Directory;
-        assert_eq!(FileKind::from_path_and_type(path_img, &dir_type), FileKind::Directory);
+        assert_eq!(
+            FileKind::from_path_and_type(path_img, &dir_type),
+            FileKind::Directory
+        );
     }
 
     #[test]

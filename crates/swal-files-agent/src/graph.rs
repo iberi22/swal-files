@@ -111,11 +111,22 @@ impl FileDependencyGraph {
                     .trim_start_matches("mod ")
                     .trim_end_matches(';')
                     .trim();
-                let target_id = format!("{}/{}", file_path.parent().unwrap_or(Path::new("")).display(), mod_name);
+                let target_id = format!(
+                    "{}/{}",
+                    file_path.parent().unwrap_or(Path::new("")).display(),
+                    mod_name
+                );
                 self.add_edge(GraphEdge::new(&file_id, target_id, EdgeKind::Import));
             } else if trimmed.starts_with("use crate::") {
-                let use_path = trimmed.trim_start_matches("use crate::").trim_end_matches(';').trim();
-                self.add_edge(GraphEdge::new(&file_id, format!("crate::{}", use_path), EdgeKind::TypeReference));
+                let use_path = trimmed
+                    .trim_start_matches("use crate::")
+                    .trim_end_matches(';')
+                    .trim();
+                self.add_edge(GraphEdge::new(
+                    &file_id,
+                    format!("crate::{}", use_path),
+                    EdgeKind::TypeReference,
+                ));
             }
         }
     }

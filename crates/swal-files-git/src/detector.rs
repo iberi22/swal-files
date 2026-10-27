@@ -679,9 +679,7 @@ fn parse_git_config_upstreams(content: &str) -> HashMap<String, String> {
     for line in content.lines() {
         let line = line.trim();
         if line.starts_with('[') && line.ends_with(']') {
-            if let (Some(branch), Some(rem), Some(mrg)) =
-                (&current_branch, &remote, &merge)
-            {
+            if let (Some(branch), Some(rem), Some(mrg)) = (&current_branch, &remote, &merge) {
                 let upstream = build_upstream_string(rem, mrg);
                 upstreams.insert(branch.clone(), upstream);
             }
@@ -692,9 +690,7 @@ fn parse_git_config_upstreams(content: &str) -> HashMap<String, String> {
 
             let section = &line[1..line.len() - 1];
             if let Some(stripped) = section.strip_prefix("branch ") {
-                let name = stripped
-                    .trim()
-                    .trim_matches('"');
+                let name = stripped.trim().trim_matches('"');
                 current_branch = Some(name.to_string());
             }
         } else if current_branch.is_some() {
@@ -710,9 +706,7 @@ fn parse_git_config_upstreams(content: &str) -> HashMap<String, String> {
         }
     }
 
-    if let (Some(branch), Some(rem), Some(mrg)) =
-        (&current_branch, &remote, &merge)
-    {
+    if let (Some(branch), Some(rem), Some(mrg)) = (&current_branch, &remote, &merge) {
         let upstream = build_upstream_string(rem, mrg);
         upstreams.insert(branch.clone(), upstream);
     }
@@ -837,7 +831,10 @@ mod tests {
 
         let detector = GitDetector::new();
         let info = detector.detect(&repo_path).await.unwrap();
-        assert_eq!(info.head_state, HeadState::Unborn("new-feature".to_string()));
+        assert_eq!(
+            info.head_state,
+            HeadState::Unborn("new-feature".to_string())
+        );
 
         let _keep_alive = dir;
     }
@@ -875,7 +872,11 @@ mod tests {
 
         // Create remote branch loose ref
         std::fs::write(
-            git_dir.join("refs").join("remotes").join("origin").join("main"),
+            git_dir
+                .join("refs")
+                .join("remotes")
+                .join("origin")
+                .join("main"),
             "1111111111111111111111111111111111111111\n",
         )
         .unwrap();
@@ -919,7 +920,10 @@ mod tests {
             Some("4444444444444444444444444444444444444444".to_string())
         );
 
-        let packed_remote_b = branches.iter().find(|b| b.name == "origin/packed-remote").unwrap();
+        let packed_remote_b = branches
+            .iter()
+            .find(|b| b.name == "origin/packed-remote")
+            .unwrap();
         assert_eq!(packed_remote_b.branch_type, BranchType::Remote);
         assert_eq!(
             packed_remote_b.commit_hash,
@@ -941,7 +945,11 @@ mod tests {
         );
 
         // Merging state
-        std::fs::write(git_dir.join("MERGE_HEAD"), "1111111111111111111111111111111111111111\n").unwrap();
+        std::fs::write(
+            git_dir.join("MERGE_HEAD"),
+            "1111111111111111111111111111111111111111\n",
+        )
+        .unwrap();
         assert_eq!(
             BranchResolver::detect_repo_state_async(&git_dir).await,
             RepoState::Merging
@@ -957,7 +965,11 @@ mod tests {
         std::fs::remove_dir(git_dir.join("rebase-merge")).unwrap();
 
         // Cherry-picking state
-        std::fs::write(git_dir.join("CHERRY_PICK_HEAD"), "1111111111111111111111111111111111111111\n").unwrap();
+        std::fs::write(
+            git_dir.join("CHERRY_PICK_HEAD"),
+            "1111111111111111111111111111111111111111\n",
+        )
+        .unwrap();
         assert_eq!(
             BranchResolver::detect_repo_state_async(&git_dir).await,
             RepoState::CherryPicking

@@ -195,13 +195,19 @@ impl FileWatcher {
     }
 
     /// Start watching a path with explicit recursive mode.
-    pub fn watch_recursive<P: AsRef<Path>>(&mut self, path: P, recursive: bool) -> Result<(), WatcherError> {
+    pub fn watch_recursive<P: AsRef<Path>>(
+        &mut self,
+        path: P,
+        recursive: bool,
+    ) -> Result<(), WatcherError> {
         let path_ref = path.as_ref();
         if !path_ref.exists() {
             return Err(WatcherError::PathNotFound(path_ref.to_path_buf()));
         }
 
-        let canonical = path_ref.canonicalize().unwrap_or_else(|_| path_ref.to_path_buf());
+        let canonical = path_ref
+            .canonicalize()
+            .unwrap_or_else(|_| path_ref.to_path_buf());
         let mode = if recursive {
             RecursiveMode::Recursive
         } else {
@@ -216,7 +222,9 @@ impl FileWatcher {
     /// Stop watching a specified path.
     pub fn unwatch<P: AsRef<Path>>(&mut self, path: P) -> Result<(), WatcherError> {
         let path_ref = path.as_ref();
-        let canonical = path_ref.canonicalize().unwrap_or_else(|_| path_ref.to_path_buf());
+        let canonical = path_ref
+            .canonicalize()
+            .unwrap_or_else(|_| path_ref.to_path_buf());
 
         if self.watched_paths.remove(&canonical) || self.watched_paths.remove(path_ref) {
             let _ = self.watcher.unwatch(&canonical);

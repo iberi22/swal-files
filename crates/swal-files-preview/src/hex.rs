@@ -36,7 +36,10 @@ impl HexDumpRow {
     pub fn format_line(&self, bytes_per_row: usize) -> String {
         format!(
             "{:08x}  {:width$}  |{}|",
-            self.offset, self.hex_bytes, self.ascii, width = bytes_per_row * 3 - 1
+            self.offset,
+            self.hex_bytes,
+            self.ascii,
+            width = bytes_per_row * 3 - 1
         )
     }
 }
@@ -97,25 +100,43 @@ impl HexInspector {
 
                 let ascii = chunk
                     .iter()
-                    .map(|&b| if b.is_ascii_graphic() || b == b' ' { b as char } else { '.' })
+                    .map(|&b| {
+                        if b.is_ascii_graphic() || b == b' ' {
+                            b as char
+                        } else {
+                            '.'
+                        }
+                    })
                     .collect();
 
-                HexDumpRow { offset, bytes: chunk.to_vec(), hex_bytes, ascii }
+                HexDumpRow {
+                    offset,
+                    bytes: chunk.to_vec(),
+                    hex_bytes,
+                    ascii,
+                }
             })
             .collect()
     }
 
     /// Asynchronously inspects binary file content up to configured `max_bytes`.
     pub async fn inspect_file<P: AsRef<Path>>(&self, path: P) -> Result<Vec<HexDumpRow>, HexError> {
-        let mut file = File::open(path.as_ref()).await.map_err(|e| HexError::IoError(e.to_string()))?;
+        let mut file = File::open(path.as_ref())
+            .await
+            .map_err(|e| HexError::IoError(e.to_string()))?;
         let mut buffer = Vec::new();
         let mut chunk = vec![0u8; 8192];
         let mut total_read = 0;
 
         while total_read < self.config.max_bytes {
             let to_read = (self.config.max_bytes - total_read).min(chunk.len());
-            let n = file.read(&mut chunk[..to_read]).await.map_err(|e| HexError::IoError(e.to_string()))?;
-            if n == 0 { break; }
+            let n = file
+                .read(&mut chunk[..to_read])
+                .await
+                .map_err(|e| HexError::IoError(e.to_string()))?;
+            if n == 0 {
+                break;
+            }
             buffer.extend_from_slice(&chunk[..n]);
             total_read += n;
         }
@@ -145,7 +166,11 @@ mod tests {
 
     #[test]
     fn test_custom_config_and_uppercase() {
-        let config = HexChunkConfig { bytes_per_row: 8, max_bytes: 100, uppercase: true };
+        let config = HexChunkConfig {
+            bytes_per_row: 8,
+            max_bytes: 100,
+            uppercase: true,
+        };
         let inspector = HexInspector::new(config);
         let rows = inspector.inspect_bytes(b"ABCDEFGH1234");
         assert_eq!(rows.len(), 2);
@@ -156,7 +181,11 @@ mod tests {
 
     #[test]
     fn test_max_bytes_and_non_printable() {
-        let config = HexChunkConfig { bytes_per_row: 16, max_bytes: 4, uppercase: false };
+        let config = HexChunkConfig {
+            bytes_per_row: 16,
+            max_bytes: 4,
+            uppercase: false,
+        };
         let inspector = HexInspector::new(config);
         let rows = inspector.inspect_bytes(&[0x00, 0x07, b'A', 0xFF, 0x10, 0x20]);
         assert_eq!(rows.len(), 1);
@@ -170,8 +199,14 @@ mod tests {
         assert!(inspector.inspect_bytes(&[]).is_empty());
         let err1 = HexError::IoError("not found".to_string());
         assert_eq!(err1.to_string(), "IO Error: not found");
-        let err2 = HexError::ExceedsLimit { size: 200, limit: 100 };
-        assert_eq!(err2.to_string(), "Size (200 bytes) exceeds limit (100 bytes)");
+        let err2 = HexError::ExceedsLimit {
+            size: 200,
+            limit: 100,
+        };
+        assert_eq!(
+            err2.to_string(),
+            "Size (200 bytes) exceeds limit (100 bytes)"
+        );
     }
 
     #[tokio::test]
@@ -184,7 +219,9 @@ mod tests {
         assert_eq!(rows[0].offset, 0);
         assert!(rows[0].ascii.contains("ELFbinary"));
 
-        let missing = inspector.inspect_file("non_existent_file_xyz_123.bin").await;
+        let missing = inspector
+            .inspect_file("non_existent_file_xyz_123.bin")
+            .await;
         assert!(matches!(missing, Err(HexError::IoError(_))));
     }
 }
