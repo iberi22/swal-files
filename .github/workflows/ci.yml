@@ -17,6 +17,9 @@ jobs:
       - name: Set up Rust stable
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Lint
+        run: cargo clippy --workspace -- -D warnings && cargo fmt --all -- --check
+
       - name: Build all targets
         run: cargo build --workspace --all-targets
 
